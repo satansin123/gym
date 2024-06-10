@@ -36,9 +36,9 @@ async function handleLogin(req, res) {
       return res.render("login", { error: "Internal Server Error" });
     }
 
-    res.cookie("uid", token, { httpOnly: true, secure: true }); // Ensure cookie is set securely
+    res.cookie("uid", token, { httpOnly: true, secure: false });
     console.log("Login successful, token set in cookie");
-    return res.redirect("/home"); // Ensure the path starts with '/'
+    return res.redirect("/home");
   } catch (error) {
     console.log("Error during login:", error);
     return res.status(500).send("Internal Server Error");

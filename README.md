@@ -4,4 +4,4 @@ npm i
 
 npm start
 
-to check go to - http://localhost:8000/users/signup
+to check go to - http://localhost:8000/

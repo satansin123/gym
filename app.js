@@ -4,7 +4,6 @@ const cookieParser = require("cookie-parser");
 const app = express();
 const port = 8000;
 const userRoutes = require("./routes/userRoute");
-const staticRouter = require("./routes/staticRouter");
 const homeRoutes = require("./routes/homeRoute");
 const connectDB = require("./connect-local");
 const {
@@ -23,9 +22,16 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-app.use("/home", restrictToLoggedInUsersOnly, homeRoutes);
-app.use("/users", userRoutes);
-app.use("/", checkAuth, staticRouter);
+app.get("/", checkAuth, (req, res) => {
+  if (req.user) {
+    return res.redirect("/home");
+  } else {
+    return res.redirect("/login");
+  }
+});
+
+app.use("/", userRoutes);
+app.use("/", restrictToLoggedInUsersOnly, homeRoutes);
 
 app.listen(port, () => {
   console.log("Server running on port", port);

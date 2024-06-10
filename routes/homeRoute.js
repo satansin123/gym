@@ -1,8 +1,8 @@
 const express = require("express");
 const router = express.Router();
 
-router.get("/", (req, res) => {
-  res.render("home"); // Ensure the view exists
+router.get("/home", (req, res) => {
+  res.render("home", { user: req.user });
 });
 
 module.exports = router;
