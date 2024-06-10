@@ -1,5 +1,7 @@
 const User = require("../models/userModel");
 const { setUser } = require("../services/userServiceToken");
+const bcrypt = require("bcrypt");
+const saltRounds = 10;
 
 async function handleSignUp(req, res) {
   const { name, email, password } = req.body;
@@ -11,7 +13,10 @@ async function handleSignUp(req, res) {
     if (existingUser) {
       return res.status(409).send("Email already in use");
     }
-    await User.create({ name, email, password });
+
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
+
+    await User.create({ name, email, password: hashedPassword });
     return res.render("login");
   } catch (error) {
     console.log("Error during sign up:", error);
@@ -23,9 +28,16 @@ async function handleLogin(req, res) {
   const { email, password } = req.body;
 
   try {
-    const user = await User.findOne({ email, password });
+    const user = await User.findOne({ email });
 
     if (!user) {
+      console.log("Invalid Username or Password");
+      return res.render("login", { error: "Invalid Username or Password" });
+    }
+
+    const isMatch = await bcrypt.compare(password, user.password);
+
+    if (!isMatch) {
       console.log("Invalid Username or Password");
       return res.render("login", { error: "Invalid Username or Password" });
     }
@@ -36,7 +48,7 @@ async function handleLogin(req, res) {
       return res.render("login", { error: "Internal Server Error" });
     }
 
-    res.cookie("uid", token, { httpOnly: true, secure: false });
+    res.cookie("uid", token, { httpOnly: true, secure: false }); // `secure: false` for local development
     console.log("Login successful, token set in cookie");
     return res.redirect("/home");
   } catch (error) {
