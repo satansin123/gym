@@ -31,7 +31,11 @@ app.get("/", checkAuth, (req, res) => {
 });
 
 app.use("/", userRoutes);
+
 app.use("/", restrictToLoggedInUsersOnly, homeRoutes);
+
+app.use("/joinClan", require("./routes/joinClan"));
+app.use("/createClan", require("./routes/createClan"));
 
 app.listen(port, () => {
   console.log("Server running on port", port);
