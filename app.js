@@ -6,6 +6,8 @@ const port = 8000;
 const userRoutes = require("./routes/userRoute");
 const homeRoutes = require("./routes/homeRoute");
 const connectDB = require("./connect-local");
+const cors = require('cors'); // Import cors middleware
+
 const {
   restrictToLoggedInUsersOnly,
   checkAuth,
@@ -18,6 +20,10 @@ connectDB.once("open", () => {
 app.set("view engine", "ejs");
 app.set("views", path.resolve("./views"));
 
+app.use(cors({
+  origin: 'http://localhost:3000', // Allow requests from this origin
+  credentials: true, // Enable CORS credentials (cookies, authorization headers)
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());

@@ -9,7 +9,7 @@ router.post("/", async (req, res) => {
     const { clanName } = req.body;
 
     if (!clanName) {
-      return res.status(400).send("Missing clanName or userId in request body");
+      return res.status(400).send("Missing clanName");
     }
 
     const token = req.cookies?.uid;

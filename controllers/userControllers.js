@@ -16,7 +16,18 @@ async function handleSignUp(req, res) {
 
     const hashedPassword = await bcrypt.hash(password, saltRounds);
 
-    await User.create({ name, email, password: hashedPassword });
+    const user = await User.create({ name, email, password: hashedPassword });
+    console.log("user added")
+
+    const token = setUser(user);
+    if (!token) {
+      console.log("Token generation failed");
+      return res.render("login", { error: "Internal Server Error" });
+    }
+
+    res.cookie("uid", token);
+
+    
     return res.render("login");
   } catch (error) {
     console.log("Error during sign up:", error);
@@ -41,6 +52,7 @@ async function handleLogin(req, res) {
       console.log("Invalid Username or Password");
       return res.render("login", { error: "Invalid Username or Password" });
     }
+    
     console.log(user);
     const token = setUser(user);
     if (!token) {
