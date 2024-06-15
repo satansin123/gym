@@ -6,7 +6,7 @@ import Signup from "./Components/Signup";
 import axios from 'axios';
 
 
-axios.defaults.withCredentials = true;
+axios.defaults.withCredentials = true;//allows cookies to be sent by default in axios req body
 
 function App() {
   return (

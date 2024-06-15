@@ -5,6 +5,7 @@ const app = express();
 const port = 8000;
 const userRoutes = require("./routes/userRoute");
 const homeRoutes = require("./routes/homeRoute");
+const clanRoutes = require("./routes/clanRoute");
 const connectDB = require("./connect-local");
 const cors = require('cors'); // Import cors middleware
 
@@ -39,9 +40,8 @@ app.get("/", checkAuth, (req, res) => {
 app.use("/", userRoutes);
 
 app.use("/", restrictToLoggedInUsersOnly, homeRoutes);
+app.use("/", restrictToLoggedInUsersOnly, clanRoutes);
 
-app.use("/joinClan", require("./routes/joinClan"));
-app.use("/createClan", require("./routes/createClan"));
 
 app.listen(port, () => {
   console.log("Server running on port", port);
