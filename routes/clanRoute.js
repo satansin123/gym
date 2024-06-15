@@ -2,7 +2,8 @@ const express = require("express");
 const router = express.Router();
 const {
   joinClan,
-  createClan
+  createClan,
+  viewClans
 } = require("../controllers/clanController");
 
 router.get("/joinClan", (req, res) => {
@@ -16,5 +17,7 @@ router.get("/createClan", (req, res) => {
 });
 
 router.post("/createClan", createClan);
+
+router.get("/viewClans", viewClans);
 
 module.exports = router;

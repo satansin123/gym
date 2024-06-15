@@ -1,3 +1,4 @@
+const ClanUser = require("../models/clanUserModel");
 const User = require("../models/userModel");
 const { setUser, getUser } = require("../services/userServiceToken");
 const bcrypt = require("bcrypt");

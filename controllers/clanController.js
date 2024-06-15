@@ -1,6 +1,8 @@
 const express = require("express");
 const Clan = require("../models/clanModel"); // Ensure the correct path
 const User = require("../models/userModel"); // Ensure the correct path
+const ClanName = require("../models/clanUserModel"); // Ensure the correct path
+const ClanUser = require("../models/clanUserModel");
 
 async function createClan(req, res) {
   try {
@@ -52,15 +54,25 @@ async function joinClan(req, res) {
       { new: true, upsert: false } // Ensure upsert is false to avoid creating new documents
     );
 
+    const clanId = clan._id;
+
+    
+
     if (!clan) {
       console.log("No such clan");
       return res.status(404).send("Clan not found");
     }
 
-    // const user = await User.findOneAndUpdate(
-    //     {_id: userId},
-    //     {$addToSet: {clans: clanName}}
-    // );
+    const clanUser = await ClanUser.findOneAndUpdate(
+      { uid: userId }, // Query to find the user
+      {
+        $addToSet: { clanNames: clanName,
+          clanIds: clanId
+         }, // $addToSet ensures no duplicates
+      },
+      { upsert: true, new: true, setDefaultsOnInsert: true } // upsert creates a new document for if user hasnt joined any clans
+      
+    );
 
     console.log("Updated clan:", clan);
     res.send("User ID added to clan");
@@ -70,4 +82,29 @@ async function joinClan(req, res) {
   }
 }
 
-module.exports = { createClan, joinClan };
+async function viewClans(req,res){
+
+  try{
+    const user = req.user;
+
+    const userId = user.id;
+
+    const clans = await ClanName.findOne({uid: userId});
+
+    if(!clans){
+      console.log("user hasnt linked their id with clans");
+      return res.status(404).send("error for being a bitch")
+    }
+
+    console.log(clans.clanNames)
+    res.json(clans.clanNames);
+
+  }
+  catch(error){
+    console.log(error)
+  }
+
+
+}
+
+module.exports = { createClan, joinClan, viewClans };
