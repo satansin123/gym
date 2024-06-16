@@ -4,7 +4,7 @@ import axios from "axios";
 import { useCookies } from "react-cookie";
 import { UserContext } from "../UserContext";
 
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
   const { user, handleLogout } = useContext(UserContext);
@@ -33,10 +33,6 @@ const Home = () => {
       }
     }
   };
-
-  if (!user) {
-    return <Navigate to="/login" />;
-  }
 
   return (
     <div>
