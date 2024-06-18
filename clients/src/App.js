@@ -26,9 +26,32 @@ const App = () => {
                   </PrivateRoute>
                 }
               />
-              <Route path="/createClan" element={<CreateClan />} />
-              <Route path="/joinClan" element={<JoinClan />} />
-              <Route path="/viewClans" element={<ViewClans />} />
+              <Route
+                path="/createClan"
+                element={
+                  <PrivateRoute>
+                    <CreateClan />{" "}
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/joinClan"
+                element={
+                  <PrivateRoute>
+                    {" "}
+                    <JoinClan />{" "}
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/viewClans"
+                element={
+                  <PrivateRoute>
+                    {" "}
+                    <ViewClans />{" "}
+                  </PrivateRoute>
+                }
+              />
               <Route path="/signup" element={<Signup />} />
               <Route path="/login" element={<Login />} />
               <Route
