@@ -3,21 +3,13 @@ const router = express.Router();
 const {
   joinClan,
   createClan,
-  viewClans,
+
+  viewAllClans, viewUserClans
 } = require("../controllers/clanController");
 
-router.get("/joinClan", (req, res) => {
-  return res.render("joinClan");
-});
-
-router.post("/joinClan", joinClan);
-
-router.get("/createClan", (req, res) => {
-  return res.render("createClan");
-});
-
 router.post("/createClan", createClan);
-
-router.get("/viewClans", viewClans);
+router.post("/joinClan", joinClan);
+router.get("/viewClans/all", viewAllClans);
+router.get("/viewClans/user", viewUserClans);
 
 module.exports = router;

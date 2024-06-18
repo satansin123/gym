@@ -1,100 +1,100 @@
-const express = require("express");
-const Clan = require("../models/clanModel"); // Ensure the correct path
-const User = require("../models/userModel"); // Ensure the correct path
-const ClanName = require("../models/clanUserModel"); // Ensure the correct path
+const Clan = require("../models/clanModel");
 const ClanUser = require("../models/clanUserModel");
 
 async function createClan(req, res) {
   try {
-    const { clanName } = req.body;
+    const { name } = req.body;
+    const userId = req.user.id; // Assuming authenticated user
 
-    const user = req.user;
-
-    const userId = user.id;
-    const clanAlready = await Clan.findOne({ name: clanName });
-
-    if (clanAlready) {
-      return res.status(400).send("Clan name in use");
+    const existingClan = await Clan.findOne({ name });
+    if (existingClan) {
+      return res.status(400).json({ error: "Clan name already in use" });
     }
 
-    const clan = Clan({
-      name: clanName,
+    const clan = new Clan({
+      name,
       members: [userId],
       clanLeader: userId,
     });
-    clan.save();
-    res.send(`${clanName} was created!`);
-    console.log(req.body);
+
+    await clan.save();
+
+    // Update ClanUser document for the user
+    await ClanUser.findOneAndUpdate(
+      { uid: userId },
+      { $addToSet: { clanIds: clan._id.toString(), clanNames: clan.name } },
+      { upsert: true }
+    );
+
+    res.status(201).json(clan);
   } catch (error) {
-    console.error(error.message);
+    console.error("Error creating clan:", error);
+    res.status(500).json({ error: "Server error" });
   }
 }
 
 async function joinClan(req, res) {
   try {
     const { clanName } = req.body;
+    const userId = req.user.id; // Assuming authenticated user
 
-    if (!clanName) {
-      return res.status(400).send("Missing clanName");
-    }
-
-    const user = req.user;
-
-    const userId = user.id;
-
-    const steps = user.steps;
-
-    // Find the clan by name and update the members array
     const clan = await Clan.findOneAndUpdate(
       { name: clanName },
-      {
-        $addToSet: { members: userId }, // $addToSet ensures no duplicates
-        //$inc: { steps: steps } // Increment the steps field by the value of steps
-      },
-      { new: true, upsert: false } // Ensure upsert is false to avoid creating new documents
+      { $addToSet: { members: userId } },
+      { new: true }
     );
-
-    const clanId = clan._id;
 
     if (!clan) {
-      console.log("No such clan");
-      return res.status(404).send("Clan not found");
+      return res.status(404).json({ error: "Clan not found" });
     }
 
-    const clanUser = await ClanUser.findOneAndUpdate(
-      { uid: userId }, // Query to find the user
-      {
-        $addToSet: { clanNames: clanName, clanIds: clanId }, // $addToSet ensures no duplicates
-      },
-      { upsert: true, new: true, setDefaultsOnInsert: true } // upsert creates a new document for if user hasnt joined any clans
+    // Update ClanUser document for the user
+    await ClanUser.findOneAndUpdate(
+      { uid: userId },
+      { $addToSet: { clanIds: clan._id.toString(), clanNames: clan.name } },
+      { upsert: true }
     );
 
-    console.log("Updated clan:", clan);
-    res.send("User ID added to clan");
+    res.json(clan);
   } catch (error) {
-    console.error("Error:", error);
-    res.status(500).send("Server error");
+    console.error("Error joining clan:", error);
+    res.status(500).json({ error: "Server error" });
   }
 }
 
-async function viewClans(req, res) {
+async function viewAllClans(req, res) {
   try {
-    const user = req.user;
+    const clans = await Clan.find({})
+      .populate("clanLeader", "name")
+      .populate("members", "name");
 
-    const userId = user.id;
+    res.json(clans);
+  } catch (error) {
+    console.error("Error fetching all clans:", error);
+    res.status(500).json({ error: "Server error" });
+  }
+}
 
-    const clans = await ClanName.findOne({ uid: userId });
+async function viewUserClans(req, res) {
+  try {
+    const userId = req.user.id; // Assuming authenticated user
 
-    if (!clans) {
-      console.log("user hasnt linked their id with clans");
-      return res.status(404).send("error for being a bitch");
+    const clanUser = await ClanUser.findOne({ uid: userId });
+    if (!clanUser) {
+      return res.status(404).json({ error: "User has not joined any clans" });
     }
 
-    console.log(clans.clanNames);
-    res.json(clans.clanNames);
+    const clanIds = clanUser.clanIds;
+
+    const clans = await Clan.find({ _id: { $in: clanIds } })
+      .populate("clanLeader", "name")
+      .populate("members", "name");
+
+    res.json(clans);
   } catch (error) {
-    console.log(error);
+    console.error("Error fetching user clans:", error);
+    res.status(500).json({ error: "Server error" });
   }
 }
 
-module.exports = { createClan, joinClan, viewClans };
+module.exports = { createClan, joinClan, viewAllClans, viewUserClans };

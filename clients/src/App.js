@@ -8,6 +8,7 @@ import ViewClans from "./components/ViewClan";
 import JoinClan from "./components/JoinClan";
 import { UserProvider } from "./UserContext";
 import PrivateRoute from "./components/PrivateRoute";
+import CreateClan from "./components/CreateClan";
 import "./App.css";
 
 const App = () => {
@@ -25,8 +26,9 @@ const App = () => {
                   </PrivateRoute>
                 }
               />
+              <Route path="/createClan" element={<CreateClan />} />
               <Route path="/joinClan" element={<JoinClan />} />
-              <Route path="/viewClan" element={<ViewClans />} />
+              <Route path="/viewClans" element={<ViewClans />} />
               <Route path="/signup" element={<Signup />} />
               <Route path="/login" element={<Login />} />
               <Route
