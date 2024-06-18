@@ -176,7 +176,7 @@ const WorkoutList = () => {
                           <strong>{exercise.name}</strong>
                           <p>Sets: {exercise.sets}</p>
                           <p>Reps: {exercise.reps}</p>
-                          <p>Weight: {exercise.weight} kgs</p>
+                          <p>Weight: {exercise.weight} KGS</p>
                         </ExerciseItem>
                       ))}
                   </ExerciseList>

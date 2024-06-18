@@ -4,6 +4,7 @@ import Signup from "./components/Signup";
 import Login from "./components/Login";
 import Home from "./components/Home";
 import AddWorkout from "./components/AddWorkout";
+import ViewClans from "./components/ViewClan";
 import JoinClan from "./components/JoinClan";
 import { UserProvider } from "./UserContext";
 import PrivateRoute from "./components/PrivateRoute";
@@ -25,6 +26,7 @@ const App = () => {
                 }
               />
               <Route path="/joinClan" element={<JoinClan />} />
+              <Route path="/viewClan" element={<ViewClans />} />
               <Route path="/signup" element={<Signup />} />
               <Route path="/login" element={<Login />} />
               <Route

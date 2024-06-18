@@ -33,7 +33,6 @@ const Signup = () => {
         name: decoded.name,
       };
 
-      //  localStorage.setItem("user", JSON.stringify(user)); // Not needed as UserContext now handles it
       setUser(user);
       navigate("/home");
     } catch (error) {

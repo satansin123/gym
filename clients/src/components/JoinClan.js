@@ -1,11 +1,8 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import axios from "axios";
-
-import { UserContext } from "../UserContext";
 
 function JoinClan() {
   const [clanName, setClanName] = useState("");
-  const { user } = useContext(UserContext);
 
   const handleInputChange = (event) => {
     setClanName(event.target.value);

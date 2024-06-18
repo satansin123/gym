@@ -7,6 +7,7 @@ const logger = require("morgan");
 const userRoutes = require("./routes/userRoute");
 const homeRoutes = require("./routes/homeRoute");
 const connectDB = require("./connect-local");
+const clanRoutes = require("./routes/clanRoute");
 const workoutRoutes = require("./routes/workoutRoutes");
 const cors = require("cors");
 const {
@@ -38,8 +39,7 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/", userRoutes);
 app.use("/workouts", restrictToLoggedInUsersOnly, workoutRoutes);
-app.use("/joinClan", require("./routes/joinClan"));
-app.use("/createClan", require("./routes/createClan"));
+app.use("/", restrictToLoggedInUsersOnly, clanRoutes);
 app.use("/", restrictToLoggedInUsersOnly, homeRoutes);
 
 app.use(function (req, res, next) {

@@ -3,9 +3,9 @@ import { Navigate } from "react-router-dom";
 import { UserContext } from "../UserContext";
 
 const PrivateRoute = ({ children }) => {
-  const { isAuthenticated } = useContext(UserContext); // Use isAuthenticated state
+  const { isAuthenticated } = useContext(UserContext);
 
-  console.log("Is authenticated:", isAuthenticated); // Debugging statement
+  console.log("Is authenticated:", isAuthenticated);
 
   if (!isAuthenticated) {
     return <Navigate to="/login" />;

@@ -25,8 +25,8 @@ const Home = () => {
           { withCredentials: true }
         );
 
-        removeCookie("uid"); // Remove cookie on client side
-        handleLogout(); // Logout after account deletion
+        removeCookie("uid");
+        handleLogout();
         navigate("/login");
       } catch (error) {
         console.error("Error deleting account:", error);
