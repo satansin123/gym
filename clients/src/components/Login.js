@@ -34,7 +34,8 @@ const Login = () => {
 
       setUser(user);
       localStorage.setItem("user", JSON.stringify(user));
-      navigate("/home");
+      window.location.reload();
+      navigate("/");
     } catch (error) {
       console.error("Login error:", error.response?.data);
       setError(error.response?.data?.error || "An error occurred");
@@ -66,6 +67,12 @@ const Login = () => {
       <h3>Go to signup page:</h3>
       <button type="button" onClick={() => navigate("/signup")}>
         Signup
+      </button>
+      <h3>
+        Go to home page if you logged in but couldnt navigate automatically:
+      </h3>
+      <button type="button" onClick={() => navigate("/")}>
+        Home
       </button>
     </div>
   );
