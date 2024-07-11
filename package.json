@@ -2,7 +2,7 @@
   "name": "gym",
   "version": "1.0.0",
   "description": "to run",
-  "main": "index.js",
+  "main": "servers/app.js",
   "scripts": {
     "start": "concurrently \"npm run start-server\" \"npm run start-client\"",
     "start-server": "cd servers && npm start",
@@ -12,5 +12,8 @@
   "license": "ISC",
   "devDependencies": {
     "concurrently": "^8.2.2"
+  },
+  "dependencies": {
+    "nodemon": "^3.1.4"
   }
 }

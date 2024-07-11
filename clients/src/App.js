@@ -9,6 +9,7 @@ import JoinClan from "./components/JoinClan";
 import { UserProvider } from "./UserContext";
 import PrivateRoute from "./components/PrivateRoute";
 import CreateClan from "./components/CreateClan";
+import Notifications from "./components/Notifications";
 import "./App.css";
 
 const App = () => {
@@ -49,6 +50,14 @@ const App = () => {
                   <PrivateRoute>
                     {" "}
                     <ViewClans />{" "}
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/notifications"
+                element={
+                  <PrivateRoute>
+                    <Notifications />
                   </PrivateRoute>
                 }
               />

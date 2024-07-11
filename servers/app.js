@@ -9,6 +9,7 @@ const homeRoutes = require("./routes/homeRoute");
 const connectDB = require("./connect-local");
 const clanRoutes = require("./routes/clanRoute");
 const workoutRoutes = require("./routes/workoutRoutes");
+const notificationsRoutes = require("./routes/notificationsRoute");
 const cors = require("cors");
 const {
   restrictToLoggedInUsersOnly,
@@ -28,6 +29,7 @@ app.use(
   })
 );
 
+
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "jade");
 
@@ -41,6 +43,7 @@ app.use("/", userRoutes);
 app.use("/workouts", restrictToLoggedInUsersOnly, workoutRoutes);
 app.use("/", restrictToLoggedInUsersOnly, clanRoutes);
 app.use("/", restrictToLoggedInUsersOnly, homeRoutes);
+app.use("/", restrictToLoggedInUsersOnly, notificationsRoutes);
 
 app.use(function (req, res, next) {
   next(createError(404));
@@ -52,5 +55,7 @@ app.use(function (err, req, res, next) {
   res.status(err.status || 500);
   res.render("error");
 });
+
+
 
 module.exports = app;

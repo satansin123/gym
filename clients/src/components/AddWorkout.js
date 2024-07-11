@@ -89,7 +89,7 @@ const WorkoutList = () => {
   useEffect(() => {
     const fetchWorkouts = async () => {
       try {
-        const response = await axios.get("http://localhost:8000/workouts", {
+        const response = await axios.get("http://127.0.0.1:8000/workouts", {
           withCredentials: true,
         });
         const flattenedWorkouts = response.data.flat();
