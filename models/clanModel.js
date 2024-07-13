@@ -1,21 +1,25 @@
-const mongoose = require('mongoose');
-const { Schema } = mongoose;
+// clanModel.js
+const mongoose = require("mongoose");
 
-const clanSchema = new Schema({
-  name:{
+const clanSchema = new mongoose.Schema({
+  name: {
     type: String,
-    required: true
+    required: true,
+    unique: true,
   },
-  members: {
-    type: [String]
+  members: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
+  ],
+  clanLeader: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
   },
-  clanLeader:{
-    type: String
-  },
-  steps: {
-    type: Number
-  }
-  
 });
 
-module.exports = mongoose.model('clan',clanSchema)
+const Clan = mongoose.model("Clan", clanSchema);
+
+module.exports = Clan;

@@ -1,20 +1,19 @@
 const mongoose = require("mongoose");
 
 const clanUserSchema = new mongoose.Schema({
-  uid:{
+  uid: {
     type: String,
     required: true,
-    unique: true
+    unique: true,
   },
   clanIds: {
     type: [String],
-    default: []
+    default: [],
   },
   clanNames: {
     type: [String],
-    default: []
+    default: [],
   },
-  
 });
 
 const ClanUser = mongoose.model("ClanUser", clanUserSchema);

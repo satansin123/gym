@@ -5,6 +5,8 @@ import JoinClan from "./Components/JoinClan";
 import Signup from "./Components/Signup";
 import axios from 'axios';
 import ViewClans from "./Components/ViewClans";
+import ClanChat from "./Components/ClanChat";
+
 
 
 axios.defaults.withCredentials = true;//allows cookies to be sent by default in axios req body
@@ -17,6 +19,7 @@ function App() {
           <Route path="/joinClan" element={<JoinClan />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/viewClans" element={<ViewClans />} />
+          <Route path="/clanChat" element={<ClanChat />} />
         </Routes>
       </div>
     </Router>

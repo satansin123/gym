@@ -1,0 +1,14 @@
+cookies time limit set
+
+understand components of clanchat like use effect etc
+
+proper alerts on joined clan 
+proper errors on view clans
+create clan component
+
+fix auto scroll formatting
+add feature such that user name appears instead of user id
+
+
+
+so for now i can create a clan, join a clan, chat in a clan with messages
