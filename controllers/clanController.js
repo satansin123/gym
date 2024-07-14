@@ -83,12 +83,13 @@ async function joinClan(req, res) {
       { new: true, upsert: false } // Ensure upsert is false to avoid creating new documents
     );
 
-    const clanId = clan._id;
 
     if (!clan) {
       console.log("No such clan");
       return res.status(404).send("Clan not found");
     }
+
+    const clanId = clan._id;
 
     const clanUser = await ClanUser.findOneAndUpdate(
       { uid: userId }, // Query to find the user
@@ -125,7 +126,6 @@ async function viewClans(req, res) {
     console.log(error);
   }
 }
-
 async function clanChats(req, res) {
   try {
     const { clanName } = req.body;
@@ -137,10 +137,11 @@ async function clanChats(req, res) {
       return res.status(400).json({ message: "You are not a member of that clan" });
     }
 
-    // Retrieve clan chat messages
-    const clanObject = await ClanChat.findOne({ clanName: clanName });
+    // Retrieve clan chat messages or create a new clanObject if not found
+    let clanObject = await ClanChat.findOne({ clanName: clanName });
     if (!clanObject) {
-      return res.status(404).json({ message: "Clan chat not found" });
+      clanObject = new ClanChat({ clanName: clanName, messages: [] });
+      await clanObject.save();
     }
 
     // Sort messages by timestamp in descending order and get the last 20

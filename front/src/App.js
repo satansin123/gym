@@ -6,6 +6,7 @@ import Signup from "./Components/Signup";
 import axios from 'axios';
 import ViewClans from "./Components/ViewClans";
 import ClanChat from "./Components/ClanChat";
+import CreateClan from "./Components/CreateClan";
 
 
 
@@ -20,6 +21,7 @@ function App() {
           <Route path="/signup" element={<Signup />} />
           <Route path="/viewClans" element={<ViewClans />} />
           <Route path="/clanChat" element={<ClanChat />} />
+          <Route path="/createClan" element={<CreateClan />} />
         </Routes>
       </div>
     </Router>

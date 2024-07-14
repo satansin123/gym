@@ -12,10 +12,17 @@ function JoinClan() {
     try {
       const response = await axios.post('http://localhost:8000/joinClan', { clanName });
       console.log(response.data);
+      alert("Clan Joined Successfully");
     } catch (error) {
-      console.error('There was an error!', error);
+      if (error.response && error.response.status === 404) {
+        alert("No Such Clan Found");
+      } else {
+        console.error(error);
+        alert("There was an error");
+      }
     }
   };
+  
 
   return (
     <div>

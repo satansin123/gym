@@ -30,6 +30,9 @@ const Chat = () => {
 
         console.log(response.data);
       } catch (error) {
+        if(error.response && error.response.status === 404){
+          alert("fuck")
+        }
         console.error("Error fetching recent chats:", error);
       }
     };
