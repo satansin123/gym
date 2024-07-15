@@ -10,6 +10,7 @@ import { UserProvider } from "./UserContext";
 import PrivateRoute from "./components/PrivateRoute";
 import CreateClan from "./components/CreateClan";
 import Notifications from "./components/Notifications";
+import Admin from "./components/Admin";
 import "./App.css";
 
 const App = () => {
@@ -59,6 +60,12 @@ const App = () => {
                   <PrivateRoute>
                     <Notifications />
                   </PrivateRoute>
+                }
+              />
+              <Route
+                path="/admin"
+                element={ 
+                  <Admin />
                 }
               />
               <Route path="/signup" element={<Signup />} />

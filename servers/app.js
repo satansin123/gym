@@ -10,6 +10,7 @@ const connectDB = require("./connect-local");
 const clanRoutes = require("./routes/clanRoute");
 const workoutRoutes = require("./routes/workoutRoutes");
 const notificationsRoutes = require("./routes/notificationsRoute");
+const adminRoutes = require("./routes/adminRoute");
 const cors = require("cors");
 const {
   restrictToLoggedInUsersOnly,
@@ -40,6 +41,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/", userRoutes);
+app.use("/", adminRoutes);
 app.use("/workouts", restrictToLoggedInUsersOnly, workoutRoutes);
 app.use("/", restrictToLoggedInUsersOnly, clanRoutes);
 app.use("/", restrictToLoggedInUsersOnly, homeRoutes);

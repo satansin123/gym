@@ -11,7 +11,7 @@ const notificationSchema = new Schema({
   details: {
     type: String,
     required: true,
-    unique: true,
+    unique: false,
   }
 }, {timestamps: true});
 
