@@ -109,6 +109,9 @@ const Admin = () => {
             <strong>{notification.title}</strong> - {notification.details}, {notification.createdAt}  
             <a className="delete" data-id={notification._id} onClick={() => handleNotificationDelete(notification._id)}>
             <img src="/trashcan.svg" alt="delete icon"/>
+            <style>
+              
+            </style>
             </a>
           </li>
         ))}

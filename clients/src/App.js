@@ -12,6 +12,7 @@ import CreateClan from "./components/CreateClan";
 import Notifications from "./components/Notifications";
 import Admin from "./components/Admin";
 import "./App.css";
+import "./Basic.css";
 
 const App = () => {
   return (

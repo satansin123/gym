@@ -11,7 +11,7 @@ const Notifications = () => {
     showNotifications();
   },[])
   const [loading, setLoading] = useState(false);
-  const [notifications, setNotifications] = useState([]);
+  const [notifications, setNotifications] = useState([{title: "No Notications", details: "There are no notifications posted for now"}]);
   const showNotifications = async () =>{
     try{
       setLoading(true);
@@ -19,7 +19,10 @@ const Notifications = () => {
       "http://localhost:8000/notifications",  {
         withCredentials: true,
       })
-      setNotifications(res.data);
+      console.log(res.data)
+      if(res.data.length!=0){setNotifications(res.data);}
+      else{setNotifications([{title: "No Notications", details: "There are no notifications posted for now"}]);}
+
     } catch(err){
       console.log(err)
     } finally {
@@ -67,11 +70,12 @@ const Notifications = () => {
     <div>
       <h1>Welcome to the Notifications Page</h1>
       <p>You are logged in as {user.email}</p>
+      <p>Current Notifications:</p>
       {loading ?(<p>Loading...</p>) : (
       <>
       <ul>
         {notifications.map((notification)=> (
-          <li><strong>{notification.title}</strong> - {notification.details}, {notification.createdAt}</li>
+          <li><strong>{notification.title}</strong> <br></br> {notification.details}, sent at- {notification.createdAt}</li>
         ))}
       </ul>
       </>
