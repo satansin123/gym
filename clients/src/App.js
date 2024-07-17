@@ -4,6 +4,7 @@ import Signup from "./components/Signup";
 import Login from "./components/Login";
 import Home from "./components/Home";
 import AddWorkout from "./components/AddWorkout";
+import CalorieTracker from "./components/CalorieTracker";
 import ViewClans from "./components/ViewClan";
 import JoinClan from "./components/JoinClan";
 import { UserProvider } from "./UserContext";
@@ -23,6 +24,22 @@ const App = () => {
                 element={
                   <PrivateRoute>
                     <AddWorkout />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/Addcalorie"
+                element={
+                  <PrivateRoute>
+                    <CalorieTracker />{" "}
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/Viewcalories"
+                element={
+                  <PrivateRoute>
+                    <CalorieTracker />{" "}
                   </PrivateRoute>
                 }
               />

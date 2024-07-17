@@ -9,6 +9,7 @@ const homeRoutes = require("./routes/homeRoute");
 const connectDB = require("./connect-local");
 const clanRoutes = require("./routes/clanRoute");
 const workoutRoutes = require("./routes/workoutRoutes");
+const calorieRoutes = require("./routes/calorieRoute");
 const cors = require("cors");
 const {
   restrictToLoggedInUsersOnly,
