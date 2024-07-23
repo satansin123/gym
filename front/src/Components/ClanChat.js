@@ -13,7 +13,7 @@ const Chat = () => {
   const [messageInput, setMessageInput] = useState("");
   const messagesEndRef = useRef(null);
 
-  useEffect(() => {
+  useEffect(() => {//useEffect helps fetch data and change the webpage after it has been rendered once
     const fetchRecentChats = async () => {
       try {
         const response = await axios.post("http://localhost:8000/clanChat", {
@@ -69,11 +69,11 @@ const Chat = () => {
 
   const sendMessage = async (e) => {
     e.preventDefault();
-    if (messageInput.trim()) {
+    if (messageInput.trim()) {//.trim() is a JavaScript string method that removes whitespace characters (spaces, tabs, newlines) from both ends of a string
       const newMessage = {
         content: messageInput,
         sender: "You",
-        timestamp: new Date().toISOString(),
+        timestamp: new Date().toISOString(),//ISO 8601 format (YYYY-MM-DDTHH:mm:ss.sssZ).
       };
       try {
         await axios.post("http://localhost:8000/sendMessage", {
