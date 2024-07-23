@@ -4,12 +4,17 @@ import Signup from "./components/Signup";
 import Login from "./components/Login";
 import Home from "./components/Home";
 import AddWorkout from "./components/AddWorkout";
-import ViewClans from "./components/ViewClan";
+import ViewClans from "./components/ViewClans";
+import ViewAllClans from "./components/ViewAllClan";
 import JoinClan from "./components/JoinClan";
+import CreateClan from "./components/CreateClan";
+import ClanChat from "./components/ClanChat"; // Added from ali
 import { UserProvider } from "./UserContext";
 import PrivateRoute from "./components/PrivateRoute";
-import CreateClan from "./components/CreateClan";
+import axios from 'axios';
 import "./App.css";
+
+axios.defaults.withCredentials = true; // Allows cookies to be sent by default in axios req body
 
 const App = () => {
   return (
@@ -18,6 +23,7 @@ const App = () => {
         <div className="App">
           <main>
             <Routes>
+              {/* Private Routes */}
               <Route
                 path="/workouts"
                 element={
@@ -30,7 +36,7 @@ const App = () => {
                 path="/createClan"
                 element={
                   <PrivateRoute>
-                    <CreateClan />{" "}
+                    <CreateClan />
                   </PrivateRoute>
                 }
               />
@@ -38,8 +44,15 @@ const App = () => {
                 path="/joinClan"
                 element={
                   <PrivateRoute>
-                    {" "}
-                    <JoinClan />{" "}
+                    <JoinClan />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/viewAllClans"
+                element={
+                  <PrivateRoute>
+                    <ViewAllClans />
                   </PrivateRoute>
                 }
               />
@@ -47,13 +60,10 @@ const App = () => {
                 path="/viewClans"
                 element={
                   <PrivateRoute>
-                    {" "}
-                    <ViewClans />{" "}
+                    <ViewClans />
                   </PrivateRoute>
                 }
               />
-              <Route path="/signup" element={<Signup />} />
-              <Route path="/login" element={<Login />} />
               <Route
                 path="/home"
                 element={
@@ -70,6 +80,10 @@ const App = () => {
                   </PrivateRoute>
                 }
               />
+              {/* Public Routes */}
+              <Route path="/signup" element={<Signup />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/clanChat" element={<ClanChat />} />
             </Routes>
           </main>
         </div>
