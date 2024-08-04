@@ -3,12 +3,16 @@ const express = require("express");
 const path = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
+const dotenv = require("dotenv");
+const http = require('http');
+const socketIo = require('socket.io');
 
 const userRoutes = require("./routes/userRoute");
 const homeRoutes = require("./routes/homeRoute");
 const connectDB = require("./connect-local");
 const clanRoutes = require("./routes/clanRoute");
 const workoutRoutes = require("./routes/workoutRoutes");
+const paymentRoutes = require("./routes/paymentRoutes");
 const cors = require("cors");
 const {
   restrictToLoggedInUsersOnly,
@@ -20,7 +24,7 @@ connectDB.once("open", () => {
 });
 
 const app = express();
-
+dotenv.config();
 app.use(
   cors({
     origin: "http://localhost:3000",
@@ -41,6 +45,7 @@ app.use("/", userRoutes);
 app.use("/workouts", restrictToLoggedInUsersOnly, workoutRoutes);
 app.use("/", restrictToLoggedInUsersOnly, clanRoutes);
 app.use("/", restrictToLoggedInUsersOnly, homeRoutes);
+app.use("/", restrictToLoggedInUsersOnly, paymentRoutes);
 
 app.use(function (req, res, next) {
   next(createError(404));

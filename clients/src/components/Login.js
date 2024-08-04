@@ -1,7 +1,7 @@
 // src/components/Login.js
 import { useState, useContext } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Navigate } from "react-router-dom";
 import { useCookies } from "react-cookie";
 import { jwtDecode } from "jwt-decode";
 import { UserContext } from "../UserContext";
@@ -13,6 +13,7 @@ const Login = () => {
   const navigate = useNavigate();
   const [cookies, setCookie] = useCookies(["uid"]);
   const { setUser } = useContext(UserContext);
+
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -35,7 +36,7 @@ const Login = () => {
       setUser(user);
       localStorage.setItem("user", JSON.stringify(user));
       window.location.reload();
-      navigate("/");
+      return <Navigate to="/" />;
     } catch (error) {
       console.error("Login error:", error.response?.data);
       setError(error.response?.data?.error || "An error occurred");
