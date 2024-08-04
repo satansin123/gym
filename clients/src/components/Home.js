@@ -22,6 +22,9 @@ const Home = () => {
   const handleViewClan = async () => {
     navigate("/viewClans");
   };
+  const handleViewAllClan = async () => {
+    navigate("/viewAllClans");
+  };
   const handleDeleteAccount = async () => {
     if (window.confirm("Are you sure you want to delete your account?")) {
       try {
@@ -48,7 +51,8 @@ const Home = () => {
       <button onClick={handleDeleteAccount}>Delete Account</button>
       <button onClick={handleWorkout}>Workouts</button>
       <button onClick={handleJoinClan}>Join Clan</button>
-      <button onClick={handleViewClan}>View Clans</button>
+      <button onClick={handleViewClan}>View Your Clans</button>
+      <button onClick={handleViewAllClan}>View All Clans</button>
       <button onClick={handleCreateClan}>Create Clan</button>
     </div>
   );

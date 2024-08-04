@@ -1,16 +1,21 @@
 const Workout = require("../models/workoutDataModel");
 
+const mongoose = require("mongoose");
+
 async function createWorkout(req, res) {
-  if (!req.user) {
+  if (!req.user || !req.user.id) {
     return res.status(401).json({ message: "Unauthorized" });
   }
+  const userId = new mongoose.Types.ObjectId(req.user.id);
+
+  const { exercises } = req.body;
+  const newWorkout = new Workout({
+    user: userId, // Use the instantiated ObjectId
+    exercises,
+    date: new Date(), // Add the current date to the workout document
+  });
+
   try {
-    const { exercises, user } = req.body;
-    const newWorkout = new Workout({
-      user,
-      exercises,
-      date: new Date(), // add current date to the workout document
-    });
     const savedWorkout = await newWorkout.save();
     res.status(201).json(savedWorkout);
   } catch (error) {

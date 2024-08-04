@@ -1,0 +1,17 @@
+cookies time limit set
+
+understand components of clanchat like use effect etc
+
+
+fix auto scroll formatting
+add feature such that user name appears instead of user id
+
+
+
+ann error when i send a message on one clan it appearson ui to go to all clans but it doesnt
+
+
+merge conflicts
+
+app.js
+package lock json in frontend
