@@ -6,7 +6,9 @@ const {
   viewClans,
   viewAllClans,
   clanChats,
-  sendMessage
+  sendMessage,
+  viewClanMembers,
+  fetchAllClans
 } = require("../controllers/clanController");
 
 router.get("/joinClan", (req, res) => {
@@ -28,6 +30,9 @@ router.get("/viewClans/user", viewClans);
 router.post("/clanChat", clanChats)
 
 router.post("/sendMessage", sendMessage)
+
+router.post("/viewClanMembers", viewClanMembers)
+router.post("/fetchAllClansAdmin", fetchAllClans)
 
 
 module.exports = router;

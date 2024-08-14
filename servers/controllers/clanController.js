@@ -4,6 +4,21 @@ const User = require("../models/userModel"); // Ensure the correct path
 const ClanName = require("../models/clanUserModel"); // Ensure the correct path
 const ClanUser = require("../models/clanUserModel");
 const ClanChat = require("../models/clanChatModel");
+
+async function fetchAllClans(req, res) {
+  try {
+    const clans = await Clan.find({});
+    if (!clans) {
+      return res.status(409).json({ error: "No clans registered" });
+    }
+    return res.json({clans});
+  } 
+  catch (error) {
+    console.error("Error during fetch up:", error);
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+}
+
 async function createClan(req, res) {
   try {
     const { clanName } = req.body;
@@ -159,6 +174,25 @@ async function viewClans(req, res) {
     console.log(error);
   }
 }
+async function viewClanMembers(req, res) {
+  try {
+    const clanName = req.body.clanName; // assuming clanName is sent in the request body
+
+    const clan = await Clan.findOne({ name: clanName }).populate('members');
+
+    if (!clan) {
+      console.log("No such clan exists");
+      return res.status(404).send("No such clan exists");
+    }
+
+    console.log(clan.members);
+    res.json(clan.members);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("Internal server error");
+  }
+}
+
 async function clanChats(req, res) {
   try {
     const { clanName } = req.body;
@@ -195,4 +229,4 @@ async function clanChats(req, res) {
 
 //  whenever user retrieves clan chats he sees the last 20 messages...the issue is since mongo if i had to retreive the last 20 messages from the a clan which is dormant, would mean that i would have to search through messages of A LOT of active clans... so bad. instead i could have a CLANCHAT model where  {clanId: messages:{}}}
 // redirect the user to React /viewchat with response passed in.... create a react component from the index.html which takes the response, generates a texts based on clanChat ui.
-module.exports = { createClan, joinClan, viewClans, clanChats, sendMessage, viewAllClans };
+module.exports = { createClan, joinClan, viewClans, clanChats, sendMessage, viewAllClans, viewClanMembers, fetchAllClans };

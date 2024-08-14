@@ -1,8 +1,22 @@
+
 const User = require("../models/userModel");
 const { setUser, getUser } = require("../services/userServiceToken");
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
 
+async function fetchAllUsers(req, res) {
+  try {
+    const users = await User.find({});
+    if (!users) {
+      return res.status(409).json({ error: "No users registered" });
+    }
+    return res.json({users});
+  } 
+  catch (error) {
+    console.error("Error during fetch up:", error);
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+}
 async function handleSignUp(req, res) {
   const { name, email, password } = req.body;
   if (!name || !email || !password) {
@@ -93,4 +107,4 @@ async function deleteUser(req, res) {
   }
 }
 
-module.exports = { handleSignUp, handleLogin, handleSignOut, deleteUser };
+module.exports = { handleSignUp, handleLogin, handleSignOut, deleteUser,fetchAllUsers };

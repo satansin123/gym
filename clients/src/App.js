@@ -1,16 +1,17 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Signup from "./components/Signup";
-import Login from "./components/Login";
-import Home from "./components/Home";
-import AddWorkout from "./components/AddWorkout";
-import ViewClans from "./components/ViewClans";
-import ViewAllClans from "./components/ViewAllClan";
-import JoinClan from "./components/JoinClan";
-import CreateClan from "./components/CreateClan";
-import ClanChat from "./components/ClanChat"; // Added from ali
+import Signup from "./Components/Signup";
+import Login from "./Components/Login";
+import Home from "./Components/Home"; // Changed to Components
+import AddWorkout from "./Components/AddWorkout"; // Changed to Components
+import ViewClans from "./Components/ViewClans"; // Changed to Components
+import ViewAllClans from "./Components/ViewAllClan"; // Changed to Components
+import JoinClan from "./Components/JoinClan"; // Changed to Components
+import CreateClan from "./Components/CreateClan"; // Changed to Components
+import ClanChat from "./Components/ClanChat"; // Added from ali
 import { UserProvider } from "./UserContext";
-import PrivateRoute from "./components/PrivateRoute";
+import PrivateRoute from "./Components/PrivateRoute"; // Changed to Components
+
 import axios from 'axios';
 import "./App.css";
 
