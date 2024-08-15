@@ -15,7 +15,7 @@ const adminRoutes = require("./routes/adminRoute");
 const cors = require("cors");
 const http = require("http");
 const socketIo = require("socket.io");
-
+const { URL } = require("./url");
 const {
   restrictToLoggedInUsersOnly,
   checkAuth,
@@ -25,7 +25,7 @@ const app = express();
 const server = http.createServer(app);
 const io = socketIo(server, {
   cors: {
-    origin: "http://localhost:3000",
+    origin: `${URL}`,
     methods: ["GET", "POST"],
   },
 });
@@ -39,7 +39,7 @@ connectDB.once("open", () => {
 // Middleware setup
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: `${URL}`,
     credentials: true,
   })
 );

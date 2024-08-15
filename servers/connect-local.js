@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 // MongoDB connection string for local MongoDB instance
-const uri = "mongodb://127.0.0.1:27017/gym";
+const uri = process.env.MONGO_URI || "mongodb://127.0.0.1:27017/gym";
 
 // MongoDB connection options
 const options = {
