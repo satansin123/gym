@@ -9,9 +9,10 @@ const homeRoutes = require("./routes/homeRoute");
 const connectDB = require("./connect-local");
 const clanRoutes = require("./routes/clanRoute");
 const workoutRoutes = require("./routes/workoutRoutes");
+const calorieRoutes = require("./routes/calorieRoute");
 const cors = require("cors");
-const http = require('http');
-const socketIo = require('socket.io');
+const http = require("http");
+const socketIo = require("socket.io");
 
 const {
   restrictToLoggedInUsersOnly,
@@ -23,8 +24,8 @@ const server = http.createServer(app);
 const io = socketIo(server, {
   cors: {
     origin: "http://localhost:3000",
-    methods: ["GET", "POST"]
-  }
+    methods: ["GET", "POST"],
+  },
 });
 
 const port = 8000;
@@ -55,6 +56,7 @@ app.use("/", userRoutes);
 app.use("/workouts", restrictToLoggedInUsersOnly, workoutRoutes);
 app.use("/", restrictToLoggedInUsersOnly, clanRoutes);
 app.use("/", restrictToLoggedInUsersOnly, homeRoutes);
+app.use("/", restrictToLoggedInUsersOnly, calorieRoutes);
 
 // Example middleware to redirect based on authentication
 app.get("/", checkAuth, (req, res) => {
@@ -66,18 +68,18 @@ app.get("/", checkAuth, (req, res) => {
 });
 
 // Socket.IO logic
-io.on('connection', (socket) => {
-  console.log('A user connected');
-  io.emit('a user joined')
+io.on("connection", (socket) => {
+  console.log("A user connected");
+  io.emit("a user joined");
 
-  socket.on('chat message', (msg) => {
-    console.log('Message from client: ' + msg);
-    io.emit('chat message', msg); // Broadcast message to all clients
+  socket.on("chat message", (msg) => {
+    console.log("Message from client: " + msg);
+    io.emit("chat message", msg); // Broadcast message to all clients
   });
 
-  socket.on('disconnect', () => {
-    io.emit("disconnected")
-    console.log('User disconnected');
+  socket.on("disconnect", () => {
+    io.emit("disconnected");
+    console.log("User disconnected");
   });
 });
 

@@ -25,6 +25,9 @@ const Home = () => {
   const handleViewAllClan = async () => {
     navigate("/viewAllClans");
   };
+  const handleCalorieTracker = async () => {
+    navigate("/add-calorie");
+  };
   const handleDeleteAccount = async () => {
     if (window.confirm("Are you sure you want to delete your account?")) {
       try {
@@ -54,6 +57,7 @@ const Home = () => {
       <button onClick={handleViewClan}>View Your Clans</button>
       <button onClick={handleViewAllClan}>View All Clans</button>
       <button onClick={handleCreateClan}>Create Clan</button>
+      <button onClick={handleCalorieTracker}>Add calorie</button>
     </div>
   );
 };

@@ -11,8 +11,9 @@ import CreateClan from "./Components/CreateClan"; // Changed to Components
 import ClanChat from "./Components/ClanChat"; // Added from ali
 import { UserProvider } from "./UserContext";
 import PrivateRoute from "./Components/PrivateRoute"; // Changed to Components
+import CalorieTracker from "./Components/Calorietracker";
 
-import axios from 'axios';
+import axios from "axios";
 import "./App.css";
 
 axios.defaults.withCredentials = true; // Allows cookies to be sent by default in axios req body
@@ -30,6 +31,22 @@ const App = () => {
                 element={
                   <PrivateRoute>
                     <AddWorkout />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/add-calorie"
+                element={
+                  <PrivateRoute>
+                    <CalorieTracker />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/view-calories"
+                element={
+                  <PrivateRoute>
+                    <CalorieTracker />
                   </PrivateRoute>
                 }
               />
