@@ -11,7 +11,7 @@ const options = {
 
 // Connect to local MongoDB instance
 mongoose
-  .connect(uri, options)
+  .connect(uri)
   .then(() => {
     console.log("Connected to local MongoDB.");
   })

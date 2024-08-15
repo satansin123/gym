@@ -30,7 +30,7 @@ const io = socketIo(server, {
   },
 });
 
-const port = 8000;
+const port = process.env.PORT || 8000;
 
 connectDB.once("open", () => {
   console.log("MongoDB connection established.");
