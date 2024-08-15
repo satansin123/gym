@@ -3,7 +3,7 @@ import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { useCookies } from "react-cookie";
 import { UserContext } from "../UserContext";
-
+import { URL } from "../url";
 import { useNavigate } from "react-router-dom";
 
 const Notifications = () => {
@@ -20,7 +20,7 @@ const Notifications = () => {
   const showNotifications = async () => {
     try {
       setLoading(true);
-      const res = await axios.get("http://localhost:8000/notifications", {
+      const res = await axios.get(`${URL}/notifications`, {
         withCredentials: true,
       });
       console.log(res.data);
@@ -59,11 +59,7 @@ const Notifications = () => {
   const handleDeleteAccount = async () => {
     if (window.confirm("Are you sure you want to delete your account?")) {
       try {
-        await axios.post(
-          "http://localhost:8000/deleteUser",
-          {},
-          { withCredentials: true }
-        );
+        await axios.post(`${URL}/deleteUser`, {}, { withCredentials: true });
 
         removeCookie("uid");
         handleLogout();

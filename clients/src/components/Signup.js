@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-
+import React, { useState } from "react";
+import axios from "axios";
+import { URL } from "../url";
 function Signup() {
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    password: '',
+    name: "",
+    email: "",
+    password: "",
   });
 
   const handleInputChange = (event) => {
@@ -16,12 +16,12 @@ function Signup() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const response = await axios.post('http://localhost:8000/signup', formData);
+      const response = await axios.post(`${URL}/signup`, formData);
       console.log(response.data);
-      alert('Signup successful!');
+      alert("Signup successful!");
     } catch (error) {
-      console.error('Error during sign up:', error);
-      alert('Signup failed!');
+      console.error("Error during sign up:", error);
+      alert("Signup failed!");
     }
   };
 

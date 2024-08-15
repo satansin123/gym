@@ -3,6 +3,7 @@ import axios from "axios";
 import { UserContext } from "../UserContext";
 import { Navigate } from "react-router-dom";
 import styled from "styled-components";
+import { URL } from "../url";
 
 const Container = styled.div`
   max-width: 800px;
@@ -89,7 +90,7 @@ const WorkoutList = () => {
   useEffect(() => {
     const fetchWorkouts = async () => {
       try {
-        const response = await axios.get("http://127.0.0.1:8000/workouts", {
+        const response = await axios.get(`${URL}/workouts`, {
           withCredentials: true,
         });
         const flattenedWorkouts = response.data.flat();
@@ -136,7 +137,7 @@ const WorkoutList = () => {
     event.preventDefault();
     try {
       const response = await axios.post(
-        "http://localhost:8000/workouts",
+        `${URL}/workouts`,
         {
           exercises,
           user: user.id,

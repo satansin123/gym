@@ -3,7 +3,7 @@ import React, { useContext } from "react";
 import axios from "axios";
 import { useCookies } from "react-cookie";
 import { UserContext } from "../UserContext";
-
+import { URL } from "../url";
 import { useNavigate } from "react-router-dom";
 
 const Home = () => {
@@ -36,7 +36,7 @@ const Home = () => {
     if (window.confirm("Are you sure you want to delete your account?")) {
       try {
         await axios.post(
-          "http://localhost:8000/deleteUser",
+          `${URL}/deleteUser`,
           {},
           { withCredentials: true }
         );

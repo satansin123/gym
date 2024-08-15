@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-
+import { URL } from "../url";
 const CalorieTracker = () => {
   const [calories, setCalories] = useState([]);
   const [itemName, setItemName] = useState("");
@@ -14,7 +14,7 @@ const CalorieTracker = () => {
 
   const fetchCalories = async () => {
     try {
-      const res = await axios.get("http://localhost:8000/view-calories");
+      const res = await axios.get(`${URL}/view-calories`);
       setCalories(res.data);
     } catch (error) {
       console.error("Error fetching calories:", error);
@@ -29,7 +29,7 @@ const CalorieTracker = () => {
       mealType,
     };
     try {
-      await axios.post("http://localhost:8000/add-calorie", newCalorie);
+      await axios.post(`${URL}/add-calorie`, newCalorie);
       fetchCalories();
     } catch (error) {
       console.error("Error adding calorie:", error);
@@ -38,7 +38,7 @@ const CalorieTracker = () => {
 
   const deleteCalorie = async (id) => {
     try {
-      await axios.delete(`http://localhost:8000/calories/${id}`);
+      await axios.delete(`${URL}/calories/${id}`);
       fetchCalories();
     } catch (error) {
       console.error("Error deleting calorie:", error);
@@ -53,7 +53,7 @@ const CalorieTracker = () => {
       mealType,
     };
     try {
-      await axios.patch(`http://localhost:8000/calories/${id}`, updatedCalorie);
+      await axios.patch(`${URL}/calories/${id}`, updatedCalorie);
       fetchCalories();
     } catch (error) {
       console.error("Error updating calorie:", error);

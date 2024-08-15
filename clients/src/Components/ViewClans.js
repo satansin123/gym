@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-
+import { URL } from "../url";
 function ViewClans() {
   const [clanNames, setClanNames] = useState([]);
   const [clanChat, setClanChat] = useState(null);
@@ -10,7 +10,8 @@ function ViewClans() {
   const fetchClans = async () => {
     try {
       setLoading(true);
-      const response = await axios.get("http://localhost:8000/viewClans/user");
+      const response = await axios.get(`${URL}/viewClans/user`,
+      );
       setClanNames(response.data); // Assuming response.data is an array of clan names
     } catch (error) {
       alert(error.message);
@@ -23,8 +24,8 @@ function ViewClans() {
 
   const handleButtonClick = async (clanName) => {
     try {
-      setLoading(true); 
-      
+      setLoading(true);
+
       navigate("/clanChat", { state: { clanName: clanName } });
     } catch (error) {
       console.error("There was an error fetching the clan chat!", error);

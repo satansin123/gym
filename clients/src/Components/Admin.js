@@ -3,7 +3,7 @@ import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { useCookies } from "react-cookie";
 import { UserContext } from "../UserContext";
-
+import { URL } from "../url";
 import { useNavigate } from "react-router-dom";
 
 const Admin = () => {
@@ -19,7 +19,7 @@ const Admin = () => {
   const showNotifications = async () => {
     try {
       setLoading(true);
-      const res = await axios.get("http://localhost:8000/notifications", {
+      const res = await axios.get(`${URL}/notifications`, {
         withCredentials: true,
       });
       setNotifications(res.data);
@@ -32,7 +32,7 @@ const Admin = () => {
   const handlePostNotification = async () => {
     try {
       const res = await axios.post(
-        "http://localhost:8000/notifications",
+        `${URL}/notifications`,
         { title: notifTitle, details: notifDetails },
         { withCredentials: true }
       );
@@ -45,10 +45,9 @@ const Admin = () => {
 
   const handleNotificationDelete = async (id) => {
     try {
-      const res = await axios.delete(
-        `http://localhost:8000/notifications/${id}`,
-        { withCredentials: true }
-      );
+      const res = await axios.delete(`${URL}/notifications/${id}`, {
+        withCredentials: true,
+      });
       showNotifications();
       console.log("Notification deleted:", res);
     } catch (err) {
@@ -58,7 +57,7 @@ const Admin = () => {
 
   const getUserCount = async () => {
     try {
-      const res = await axios.get("http://localhost:8000/users", {
+      const res = await axios.get(`${URL}/users`, {
         withCredentials: true,
       });
       setUserCount(res.data);

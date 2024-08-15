@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-
+import React, { useState } from "react";
+import axios from "axios";
+import { URL } from "../url";
 function JoinClan() {
-  const [clanName, setClanName] = useState('');
+  const [clanName, setClanName] = useState("");
 
   const handleInputChange = (event) => {
     setClanName(event.target.value);
@@ -10,7 +10,9 @@ function JoinClan() {
 
   const handleSubmit = async () => {
     try {
-      const response = await axios.post('http://localhost:8000/joinClan', { clanName });
+      const response = await axios.post(`${URL}/joinClan`, {
+        clanName,
+      });
       console.log(response.data);
       alert("Clan Joined Successfully");
     } catch (error) {
@@ -22,7 +24,6 @@ function JoinClan() {
       }
     }
   };
-  
 
   return (
     <div>

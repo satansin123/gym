@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-
+import { URL } from "../url";
 const ViewClans = () => {
   const [userClans, setUserClans] = useState([]);
   const [allClans, setAllClans] = useState([]);
@@ -14,7 +14,7 @@ const ViewClans = () => {
   const fetchUserClans = async () => {
     try {
       setLoading(true);
-      const response = await axios.get("http://localhost:8000/viewClans/user", {
+      const response = await axios.get(`${URL}/viewClans/user`, {
         withCredentials: true,
       });
       setUserClans(response.data);
@@ -28,7 +28,7 @@ const ViewClans = () => {
   const fetchAllClans = async () => {
     try {
       setLoading(true);
-      const response = await axios.get("http://localhost:8000/viewClans/all", {
+      const response = await axios.get(`${URL}/viewClans/all`, {
         withCredentials: true,
       });
       setAllClans(response.data);
@@ -74,7 +74,6 @@ const ViewClans = () => {
         <p>Loading...</p>
       ) : (
         <>
-        
           <section>
             <h3>All Clans</h3>
             <ul>

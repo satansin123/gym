@@ -2,8 +2,8 @@ import React, { useEffect, useState, useRef } from "react";
 import io from "socket.io-client";
 import axios from "axios";
 import { useLocation } from "react-router-dom";
-
-const socket = io("http://localhost:8000");
+import { URL } from "../url";
+const socket = io(`${URL}`);
 
 const Chat = () => {
   const { state } = useLocation();
@@ -13,10 +13,11 @@ const Chat = () => {
   const [messageInput, setMessageInput] = useState("");
   const messagesEndRef = useRef(null);
 
-  useEffect(() => {//useEffect helps fetch data and change the webpage after it has been rendered once
+  useEffect(() => {
+    //useEffect helps fetch data and change the webpage after it has been rendered once
     const fetchRecentChats = async () => {
       try {
-        const response = await axios.post("http://localhost:8000/clanChat", {
+        const response = await axios.post(`${URL}/clanChat`, {
           clanName: clanName,
         });
 
@@ -30,8 +31,8 @@ const Chat = () => {
 
         console.log(response.data);
       } catch (error) {
-        if(error.response && error.response.status === 404){
-          alert("fuck")
+        if (error.response && error.response.status === 404) {
+          alert("fuck");
         }
         console.error("Error fetching recent chats:", error);
       }
@@ -69,14 +70,15 @@ const Chat = () => {
 
   const sendMessage = async (e) => {
     e.preventDefault();
-    if (messageInput.trim()) {//.trim() is a JavaScript string method that removes whitespace characters (spaces, tabs, newlines) from both ends of a string
+    if (messageInput.trim()) {
+      //.trim() is a JavaScript string method that removes whitespace characters (spaces, tabs, newlines) from both ends of a string
       const newMessage = {
         content: messageInput,
         sender: "You",
-        timestamp: new Date().toISOString(),//ISO 8601 format (YYYY-MM-DDTHH:mm:ss.sssZ).
+        timestamp: new Date().toISOString(), //ISO 8601 format (YYYY-MM-DDTHH:mm:ss.sssZ).
       };
       try {
-        await axios.post("http://localhost:8000/sendMessage", {
+        await axios.post(`${URL}/sendMessage`, {
           clanName: clanName,
           message: newMessage,
         });
@@ -163,7 +165,9 @@ const Chat = () => {
           margin: 0;
           padding: 0;
           overflow-y: auto;
-          max-height: calc(100vh - 120px); /* Adjust max height as per your design */
+          max-height: calc(
+            100vh - 120px
+          ); /* Adjust max height as per your design */
         }
 
         #messages > li {
