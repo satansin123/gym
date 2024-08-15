@@ -89,7 +89,7 @@ const WorkoutList = () => {
   useEffect(() => {
     const fetchWorkouts = async () => {
       try {
-        const response = await axios.get("http://localhost:8000/workouts", {
+        const response = await axios.get("http://127.0.0.1:8000/workouts", {
           withCredentials: true,
         });
         const flattenedWorkouts = response.data.flat();
@@ -113,21 +113,20 @@ const WorkoutList = () => {
 
   const handleSearch = async (event) => {
     if (event.target.value !== "") {
-      
-      const regex = new RegExp(`.*${event.target.value}.*`, 'i'); // Use the search value
-  
+      const regex = new RegExp(`.*${event.target.value}.*`, "i"); // Use the search value
+
       // Flatten the exercises from all workouts
-      const allExercises = workouts.flatMap(workout => workout.exercises);
-  
-      const filteredExercises = allExercises.filter(item => regex.test(item.name));
-  
+      const allExercises = workouts.flatMap((workout) => workout.exercises);
+
+      const filteredExercises = allExercises.filter((item) =>
+        regex.test(item.name)
+      );
+
       filteredExercises.forEach((element) => {
         console.log(element);
       });
     }
   };
-  
-
 
   const handleAddExercise = () => {
     setExercises([...exercises, { name: "", sets: 0, reps: 0, weight: 0 }]);
@@ -161,7 +160,6 @@ const WorkoutList = () => {
     }));
   };
 
-  
   const workoutsByDate = workouts.reduce((acc, workout) => {
     const date = new Date(workout.date).toISOString().split("T")[0];
     if (!acc[date]) {
@@ -173,14 +171,14 @@ const WorkoutList = () => {
 
   return (
     <Container>
-      <form >
-    <input
+      <form>
+        <input
           type="text"
           placeholder="Email"
           onChange={(e) => handleSearch(e)}
           required
         />
-        </form>
+      </form>
       {Object.keys(workoutsByDate).map((date) => (
         <div key={date}>
           <DateHeading onClick={() => handleToggleDate(date)}>

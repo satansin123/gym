@@ -5,7 +5,7 @@ const {
   getWorkouts,
 } = require("../controllers/workoutController");
 
-router.post("/", createWorkout);
-router.get("/", getWorkouts);
+router.post("/workouts", createWorkout);
+router.get("/workouts", getWorkouts);
 
 module.exports = router;

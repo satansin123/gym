@@ -10,6 +10,8 @@ const connectDB = require("./connect-local");
 const clanRoutes = require("./routes/clanRoute");
 const workoutRoutes = require("./routes/workoutRoutes");
 const calorieRoutes = require("./routes/calorieRoute");
+const notificationsRoutes = require("./routes/notificationsRoute");
+const adminRoutes = require("./routes/adminRoute");
 const cors = require("cors");
 const http = require("http");
 const socketIo = require("socket.io");
@@ -53,11 +55,12 @@ app.use(express.static(path.join(__dirname, "public")));
 
 // Route setup
 app.use("/", userRoutes);
-app.use("/workouts", restrictToLoggedInUsersOnly, workoutRoutes);
+app.use("/", restrictToLoggedInUsersOnly, workoutRoutes);
 app.use("/", restrictToLoggedInUsersOnly, clanRoutes);
 app.use("/", restrictToLoggedInUsersOnly, homeRoutes);
 app.use("/", restrictToLoggedInUsersOnly, calorieRoutes);
-
+app.use("/", restrictToLoggedInUsersOnly, notificationsRoutes);
+app.use("/", adminRoutes);
 // Example middleware to redirect based on authentication
 app.get("/", checkAuth, (req, res) => {
   if (req.user) {

@@ -14,7 +14,10 @@ import PrivateRoute from "./Components/PrivateRoute"; // Changed to Components
 import CalorieTracker from "./Components/Calorietracker";
 
 import axios from "axios";
+import Notifications from "./Components/Notifications";
+import Admin from "./Components/Admin";
 import "./App.css";
+import "./Basic.css";
 
 axios.defaults.withCredentials = true; // Allows cookies to be sent by default in axios req body
 
@@ -50,6 +53,7 @@ const App = () => {
                   </PrivateRoute>
                 }
               />
+
               <Route
                 path="/createClan"
                 element={
@@ -98,6 +102,15 @@ const App = () => {
                   </PrivateRoute>
                 }
               />
+              <Route
+                path="/notifications"
+                element={
+                  <PrivateRoute>
+                    <Notifications />
+                  </PrivateRoute>
+                }
+              />
+              <Route path="/admin" element={<Admin />} />
               {/* Public Routes */}
               <Route path="/signup" element={<Signup />} />
               <Route path="/login" element={<Login />} />
