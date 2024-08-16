@@ -3,7 +3,7 @@ const express = require("express");
 const path = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
-
+require("dotenv").config();
 const userRoutes = require("./routes/userRoute");
 const homeRoutes = require("./routes/homeRoute");
 const connectDB = require("./connect-atlas");
