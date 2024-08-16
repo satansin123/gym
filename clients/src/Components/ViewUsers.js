@@ -10,7 +10,7 @@ const ViewUsers = () => {
 
   const handleView = async () => {
     try {
-      const response = await axios.post(`${URL}/fetchAllUsers`);
+      const response = await axios.post("http://localhost:8000/fetchAllUsers");
       console.log(response.data);
       if (Array.isArray(response.data.users)) {
         setUsers(response.data.users);
@@ -60,9 +60,7 @@ const ViewUsers = () => {
               <tbody>
                 {users.map((user) => (
                   <tr key={user._id} className="hover:bg-gray-100">
-                    <td className="px-4 py-2 border-b">
-                      {user._id.toString()}
-                    </td>
+                    <td className="px-4 py-2 border-b">{user._id.toString()}</td>
                     <td className="px-4 py-2 border-b">{user.name}</td>
                     <td className="px-4 py-2 border-b">{user.email}</td>
                     <td className="px-4 py-2 border-b">

@@ -44,9 +44,9 @@ const Admin = () => {
       console.log(err);
     }
   };
-  const handleViewUsers = () => {
-    navigate("/viewUsers");
-  };
+  const handleViewUsers = () =>{
+    navigate('/viewUsers')
+  }
 
   const handleNotificationDelete = async (id) => {
     try {

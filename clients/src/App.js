@@ -7,6 +7,7 @@ import AddWorkout from "./Components/AddWorkout"; // Changed to Components
 import WorkoutList from "./Components/ViewWorkous"; // Changed to Components
 import ViewClans from "./Components/ViewClans"; // Changed to Components
 import ViewUsers from "./Components/ViewUsers"; // Changed to Components
+import ViewUsers from "./Components/ViewUsers"; // Changed to Components
 import ViewAllClans from "./Components/ViewAllClan"; // Changed to Components
 import JoinClan from "./Components/JoinClan"; // Changed to Components
 import CreateClan from "./Components/CreateClan"; // Changed to Components
@@ -29,9 +30,10 @@ const App = () => {
       <UserProvider>
         <div className="App">
           <main>
+
             <Routes>
-              <Route path="/admin" element={<Admin />} />
-              <Route path="/viewUsers" element={<ViewUsers />} />
+            <Route path="/admin" element={<Admin />} />
+            <Route path="/viewUsers" element={<ViewUsers />} />
 
               {/* Private Routes */}
               <Route
@@ -46,7 +48,7 @@ const App = () => {
                 path="/viewWorkouts"
                 element={
                   <PrivateRoute>
-                    <WorkoutList />
+                    <ViewWorkouts />
                   </PrivateRoute>
                 }
               />

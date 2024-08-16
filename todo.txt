@@ -13,5 +13,7 @@ ann error when i send a message on one clan it appearson ui to go to all clans b
 
 merge conflicts
 
+add a filter feature where u can filter workouts by date
+
 app.js
 package lock json in frontend
