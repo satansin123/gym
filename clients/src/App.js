@@ -4,7 +4,9 @@ import Signup from "./Components/Signup";
 import Login from "./Components/Login";
 import Home from "./Components/Home"; // Changed to Components
 import AddWorkout from "./Components/AddWorkout"; // Changed to Components
+import ViewWorkouts from "./Components/ViewWorkouts"; // Changed to Components
 import ViewClans from "./Components/ViewClans"; // Changed to Components
+import ViewUsers from "./Components/ViewUsers"; // Changed to Components
 import ViewAllClans from "./Components/ViewAllClan"; // Changed to Components
 import JoinClan from "./Components/JoinClan"; // Changed to Components
 import CreateClan from "./Components/CreateClan"; // Changed to Components
@@ -27,13 +29,25 @@ const App = () => {
       <UserProvider>
         <div className="App">
           <main>
+
             <Routes>
+            <Route path="/admin" element={<Admin />} />
+            <Route path="/viewUsers" element={<ViewUsers />} />
+
               {/* Private Routes */}
               <Route
                 path="/workouts"
                 element={
                   <PrivateRoute>
                     <AddWorkout />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/viewWorkouts"
+                element={
+                  <PrivateRoute>
+                    <ViewWorkouts />
                   </PrivateRoute>
                 }
               />
@@ -110,7 +124,6 @@ const App = () => {
                   </PrivateRoute>
                 }
               />
-              <Route path="/admin" element={<Admin />} />
               {/* Public Routes */}
               <Route path="/signup" element={<Signup />} />
               <Route path="/login" element={<Login />} />

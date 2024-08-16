@@ -42,6 +42,9 @@ const Admin = () => {
       console.log(err);
     }
   };
+  const handleViewUsers = () =>{
+    navigate('/viewUsers')
+  }
 
   const handleNotificationDelete = async (id) => {
     try {
@@ -92,6 +95,7 @@ const Admin = () => {
       />
       <br></br>
       <button onClick={handlePostNotification}>Post Notification</button>
+      <button onClick={handleViewUsers}>View User Details</button>
 
       <h3>Currently posted notifications</h3>
 

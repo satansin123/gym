@@ -68,6 +68,9 @@ const Login = () => {
       <button type="button" onClick={() => navigate("/signup")}>
         Signup
       </button>
+      <button type="button" onClick={() => navigate("/admin")}>
+        Admin
+      </button>
       <h3>
         Go to home page if you logged in but couldnt navigate automatically:
       </h3>
