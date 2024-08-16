@@ -21,4 +21,5 @@ async function handleGettingUsers(req, res) {
     return res.status(500).json({ error: "Internal Server Error" });
   }
 }
+
 module.exports = { handleGettingUsers };

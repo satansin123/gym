@@ -4,18 +4,18 @@ const path = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 require("dotenv").config();
+const cors = require("cors");
+const http = require("http");
+const socketIo = require("socket.io");
+
 const userRoutes = require("./routes/userRoute");
 const homeRoutes = require("./routes/homeRoute");
-const connectDB = require("./connect-atlas");
+const connectDB = require("./connect-local");
 const clanRoutes = require("./routes/clanRoute");
 const workoutRoutes = require("./routes/workoutRoutes");
 const calorieRoutes = require("./routes/calorieRoute");
 const notificationsRoutes = require("./routes/notificationsRoute");
 const adminRoutes = require("./routes/adminRoute");
-
-const cors = require("cors");
-const http = require("http");
-const socketIo = require("socket.io");
 const { URL } = require("./url");
 const {
   restrictToLoggedInUsersOnly,

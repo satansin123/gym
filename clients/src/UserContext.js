@@ -65,7 +65,7 @@ export const UserProvider = ({ children }) => {
   if (loading) return <div>Loading...</div>;
 
   return (
-    <UserContext.Provider value={{ user, login, logout, isAuthenticated }}>
+    <UserContext.Provider value={{ user, isAuthenticated, login, logout }}>
       {children}
     </UserContext.Provider>
   );
