@@ -4,6 +4,7 @@ import { UserContext } from "../UserContext";
 import { Navigate } from "react-router-dom";
 import styled from "styled-components";
 import { URL } from "../url";
+import { useNavigate } from "react-router-dom";
 
 const Container = styled.div`
   max-width: 800px;
@@ -68,20 +69,21 @@ const Button = styled.button`
   display: inline-block;
   margin: 10px 5px;
   padding: 10px 15px;
-  background-color: #007bff;
+  background-color: black;
   color: white;
   border: none;
   border-radius: 5px;
   cursor: pointer;
 
   &:hover {
-    background-color: #0056b3;
+    background-color: gray;
   }
 `;
 
 const WorkoutList = () => {
   const { user } = useContext(UserContext);
   const [workouts, setWorkouts] = useState([]);
+  const navigate = useNavigate();
   const [exercises, setExercises] = useState([
     { name: "", sets: 0, reps: 0, weight: 0 },
   ]);
@@ -154,13 +156,6 @@ const WorkoutList = () => {
     return <Navigate to="/login" />;
   }
 
-  const handleToggleDate = (date) => {
-    setOpenDates((prev) => ({
-      ...prev,
-      [date]: !prev[date],
-    }));
-  };
-
   const workoutsByDate = workouts.reduce((acc, workout) => {
     const date = new Date(workout.date).toISOString().split("T")[0];
     if (!acc[date]) {
@@ -170,48 +165,15 @@ const WorkoutList = () => {
     return acc;
   }, {});
 
+  const viewWorkouts = () => {
+    navigate("/viewWorkouts");
+  };
   return (
     <Container>
-      <form>
-        <input
-          type="text"
-          placeholder="Email"
-          onChange={(e) => handleSearch(e)}
-          required
-        />
-      </form>
-      {Object.keys(workoutsByDate).map((date) => (
-        <div key={date}>
-          <DateHeading onClick={() => handleToggleDate(date)}>
-            {date}
-          </DateHeading>
-          {openDates[date] && (
-            <ul>
-              {workoutsByDate[date].map((workout) => (
-                <WorkoutCard key={workout._id}>
-                  {workout.exercises && workout.exercises.length > 0 ? (
-                    <h3>{workout.exercises[0].name}</h3>
-                  ) : (
-                    <h3>No exercises available</h3>
-                  )}
-                  <p>Exercises:</p>
-                  <ExerciseList>
-                    {workout.exercises &&
-                      workout.exercises.map((exercise) => (
-                        <ExerciseItem key={exercise._id}>
-                          <strong>{exercise.name}</strong>
-                          <p>Sets: {exercise.sets}</p>
-                          <p>Reps: {exercise.reps}</p>
-                          <p>Weight: {exercise.weight} KGS</p>
-                        </ExerciseItem>
-                      ))}
-                  </ExerciseList>
-                </WorkoutCard>
-              ))}
-            </ul>
-          )}
-        </div>
-      ))}
+      <Button type="submit" onClick={viewWorkouts}>
+        View Workouts
+      </Button>
+
       <Form onSubmit={handleSubmit}>
         {exercises.map((exercise, index) => (
           <FormRow key={index}>

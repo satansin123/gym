@@ -22,13 +22,15 @@ const Admin = () => {
       const res = await axios.get(`${URL}/notifications`, {
         withCredentials: true,
       });
-      setNotifications(res.data);
+      setNotifications(Array.isArray(res.data) ? res.data : []);
     } catch (err) {
       console.log(err);
+      setNotifications([]); // Ensure notifications is an empty array on error
     } finally {
       setLoading(false);
     }
   };
+
   const handlePostNotification = async () => {
     try {
       const res = await axios.post(
@@ -41,6 +43,9 @@ const Admin = () => {
     } catch (err) {
       console.log(err);
     }
+  };
+  const handleViewUsers = () => {
+    navigate("/viewUsers");
   };
 
   const handleNotificationDelete = async (id) => {
@@ -92,6 +97,7 @@ const Admin = () => {
       />
       <br></br>
       <button onClick={handlePostNotification}>Post Notification</button>
+      <button onClick={handleViewUsers}>View User Details</button>
 
       <h3>Currently posted notifications</h3>
 
@@ -100,20 +106,20 @@ const Admin = () => {
       ) : (
         <>
           <ul>
-            {notifications.map((notification) => (
-              <li>
-                <strong>{notification.title}</strong> - {notification.details},{" "}
-                {notification.createdAt}
-                <a
-                  className="delete"
-                  data-id={notification._id}
-                  onClick={() => handleNotificationDelete(notification._id)}
-                >
-                  <img src="/trashcan.svg" alt="delete icon" />
-                  <style></style>
-                </a>
-              </li>
-            ))}
+            {Array.isArray(notifications) &&
+              notifications.map((notification) => (
+                <li key={notification._id}>
+                  <strong>{notification.title}</strong> - {notification.details}
+                  , {notification.createdAt}
+                  <a
+                    className="delete"
+                    data-id={notification._id}
+                    onClick={() => handleNotificationDelete(notification._id)}
+                  >
+                    <img src="/trashcan.svg" alt="delete icon" />
+                  </a>
+                </li>
+              ))}
           </ul>
         </>
       )}

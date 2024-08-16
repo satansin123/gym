@@ -52,6 +52,9 @@ const Login = () => {
       <button type="button" onClick={() => navigate("/signup")}>
         Sign Up
       </button>
+      <button type="button" onClick={() => navigate("/admin")}>
+        Admin
+      </button>
     </div>
   );
 };
