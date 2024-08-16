@@ -6,7 +6,7 @@ const logger = require("morgan");
 require("dotenv").config();
 const userRoutes = require("./routes/userRoute");
 const homeRoutes = require("./routes/homeRoute");
-const connectDB = require("./connect-local");
+const connectDB = require("./connect-atlas");
 const clanRoutes = require("./routes/clanRoute");
 const workoutRoutes = require("./routes/workoutRoutes");
 const calorieRoutes = require("./routes/calorieRoute");
