@@ -1,4 +1,3 @@
-// src/components/Home.js
 import React, { useContext } from "react";
 import axios from "axios";
 import { useCookies } from "react-cookie";
@@ -6,65 +5,64 @@ import { UserContext } from "../UserContext";
 import { URL } from "../url";
 import { useNavigate } from "react-router-dom";
 
-const Home = () => {
-  const { user, handleLogout } = useContext(UserContext);
+const Dashboard = () => {
+  const { user, logout } = useContext(UserContext);
   const [, , removeCookie] = useCookies(["uid"]);
   const navigate = useNavigate();
-  const handleWorkout = async () => {
-    navigate("/workouts");
-  };
-  const handleJoinClan = async () => {
-    navigate("/joinclan");
-  };
-  const handleCreateClan = async () => {
-    navigate("/createClan");
-  };
-  const handleViewClan = async () => {
-    navigate("/viewClans");
-  };
-  const handleViewAllClan = async () => {
-    navigate("/viewAllClans");
-  };
-  const handleCalorieTracker = async () => {
-    navigate("/add-calorie");
-  };
 
-  const handleNotifications = async () => {
-    navigate("/notifications");
-  };
+  const handleNavigation = (path) => () => navigate(path);
+
   const handleDeleteAccount = async () => {
-    if (window.confirm("Are you sure you want to delete your account?")) {
+    if (
+      window.confirm(
+        "Are you sure you want to delete your account? This action cannot be undone."
+      )
+    ) {
       try {
-        await axios.post(
-          `${URL}/deleteUser`,
-          {},
-          { withCredentials: true }
-        );
-
+        await axios.post(`${URL}/deleteUser`, {}, { withCredentials: true });
         removeCookie("uid");
-        handleLogout();
-        navigate("/login");
+        logout();
       } catch (error) {
         console.error("Error deleting account:", error);
+        alert("Failed to delete account. Please try again.");
       }
     }
   };
 
   return (
-    <div>
-      <h1>Welcome to the Home Page</h1>
-      <p>You are logged in as {user.email}</p>
-      <button onClick={handleLogout}>Sign Out</button>
-      <button onClick={handleDeleteAccount}>Delete Account</button>
-      <button onClick={handleWorkout}>Workouts</button>
-      <button onClick={handleJoinClan}>Join Clan</button>
-      <button onClick={handleViewClan}>View Your Clans</button>
-      <button onClick={handleViewAllClan}>View All Clans</button>
-      <button onClick={handleCreateClan}>Create Clan</button>
-      <button onClick={handleCalorieTracker}>Add calorie</button>
-      <button onClick={handleNotifications}>Notifications</button>
+    <div style={{ maxWidth: "600px", margin: "0 auto", padding: "20px" }}>
+      <h1>Welcome, {user.name}!</h1>
+      <p>Email: {user.email}</p>
+      <div
+        style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px" }}
+      >
+        <button onClick={handleNavigation("/workouts")}>Workouts</button>
+        <button onClick={handleNavigation("/joinclan")}>Join Clan</button>
+        <button onClick={handleNavigation("/viewClans")}>
+          View Your Clans
+        </button>
+        <button onClick={handleNavigation("/viewAllClans")}>
+          View All Clans
+        </button>
+        <button onClick={handleNavigation("/createClan")}>Create Clan</button>
+        <button onClick={handleNavigation("/add-calorie")}>Add Calorie</button>
+        <button onClick={handleNavigation("/notifications")}>
+          Notifications
+        </button>
+      </div>
+      <div style={{ marginTop: "20px" }}>
+        <button onClick={logout} style={{ marginRight: "10px" }}>
+          Sign Out
+        </button>
+        <button
+          onClick={handleDeleteAccount}
+          style={{ backgroundColor: "red", color: "white" }}
+        >
+          Delete Account
+        </button>
+      </div>
     </div>
   );
 };
 
-export default Home;
+export default Dashboard;

@@ -1,35 +1,39 @@
 const { getUser } = require("../services/userServiceToken");
 
+const PUBLIC_ROUTES = ["/login", "/signup", "/auth/login", "/auth/signup"];
+
 async function restrictToLoggedInUsersOnly(req, res, next) {
+  if (PUBLIC_ROUTES.includes(req.path)) {
+    return next();
+  }
+
   const token = req.cookies?.uid;
-  console.log("Token from cookies:", token); // Debugging statement
   if (!token) {
-    console.log("No token found, redirecting to login");
-    return res.redirect("/login");
+    return res.status(401).json({ error: "Unauthorized" });
   }
 
   const user = getUser(token);
-  console.log("Decoded user:", user); // Debugging statement
   if (!user) {
-    console.log("Token verification failed, redirecting to login");
-    return res.redirect("/login");
+    return res.status(401).json({ error: "Invalid token" });
   }
 
   req.user = user;
   next();
 }
 
-async function checkAuth(req, res, next) {
+function checkAuth(req, res, next) {
+  if (PUBLIC_ROUTES.includes(req.path)) {
+    return next();
+  }
+
   const token = req.cookies?.uid;
   if (!token) {
-    console.log("No token found in cookies.");
-    return res.redirect("/login");
+    return res.status(401).json({ error: "Unauthorized" });
   }
 
   const user = getUser(token);
   if (!user) {
-    console.log("Token verification failed.");
-    return res.redirect("/login");
+    return res.status(401).json({ error: "Invalid token" });
   }
 
   req.user = user;

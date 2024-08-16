@@ -1,101 +1,87 @@
-// src/components/Home.js
 import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
-import { useCookies } from "react-cookie";
 import { UserContext } from "../UserContext";
 import { URL } from "../url";
 import { useNavigate } from "react-router-dom";
 
 const Notifications = () => {
+  const [notifications, setNotifications] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const { user } = useContext(UserContext);
+  const navigate = useNavigate();
+
   useEffect(() => {
-    showNotifications();
+    fetchNotifications();
   }, []);
-  const [loading, setLoading] = useState(false);
-  const [notifications, setNotifications] = useState([
-    {
-      title: "No Notications",
-      details: "There are no notifications posted for now",
-    },
-  ]);
-  const showNotifications = async () => {
+
+  const fetchNotifications = async () => {
     try {
       setLoading(true);
       const res = await axios.get(`${URL}/notifications`, {
         withCredentials: true,
       });
-      console.log(res.data);
-      if (res.data.length != 0) {
-        setNotifications(res.data);
-      } else {
-        setNotifications([
-          {
-            title: "No Notications",
-            details: "There are no notifications posted for now",
-          },
-        ]);
-      }
+      setNotifications(res.data);
     } catch (err) {
-      console.log(err);
+      console.error("Error fetching notifications:", err);
+      setError("Failed to load notifications. Please try again later.");
     } finally {
       setLoading(false);
     }
   };
 
-  const { user, handleLogout } = useContext(UserContext);
-  const [, , removeCookie] = useCookies(["uid"]);
-  const navigate = useNavigate();
-  const handleWorkout = async () => {
-    navigate("/workouts");
+  const formatDate = (dateString) => {
+    return new Date(dateString).toLocaleString();
   };
-  const handleJoinClan = async () => {
-    navigate("/joinclan");
-  };
-  const handleCreateClan = async () => {
-    navigate("/createClan");
-  };
-  const handleViewClan = async () => {
-    navigate("/viewClans");
-  };
-  const handleDeleteAccount = async () => {
-    if (window.confirm("Are you sure you want to delete your account?")) {
-      try {
-        await axios.post(`${URL}/deleteUser`, {}, { withCredentials: true });
 
-        removeCookie("uid");
-        handleLogout();
-        navigate("/login");
-      } catch (error) {
-        console.error("Error deleting account:", error);
-      }
-    }
-    console.log("hey");
-  };
+  const handleNavigation = (path) => () => navigate(path);
 
   return (
-    <div>
-      <h1>Welcome to the Notifications Page</h1>
-      <p>You are logged in as {user.email}</p>
-      <p>Current Notifications:</p>
+    <div style={{ maxWidth: "800px", margin: "0 auto", padding: "20px" }}>
+      <h1>Notifications</h1>
+      <p>
+        Welcome, {user.name} ({user.email})
+      </p>
+
       {loading ? (
-        <p>Loading...</p>
+        <p>Loading notifications...</p>
+      ) : error ? (
+        <p style={{ color: "red" }}>{error}</p>
+      ) : notifications.length === 0 ? (
+        <p>No notifications at the moment.</p>
       ) : (
-        <>
-          <ul>
-            {notifications.map((notification) => (
-              <li>
-                <strong>{notification.title}</strong> <br></br>{" "}
-                {notification.details}, sent at- {notification.createdAt}
-              </li>
-            ))}
-          </ul>
-        </>
+        <ul style={{ listStyleType: "none", padding: 0 }}>
+          {notifications.map((notification) => (
+            <li
+              key={notification._id}
+              style={{
+                marginBottom: "15px",
+                borderBottom: "1px solid #ccc",
+                paddingBottom: "10px",
+              }}
+            >
+              <h3>{notification.title}</h3>
+              <p>{notification.details}</p>
+              <small>Sent at: {formatDate(notification.createdAt)}</small>
+            </li>
+          ))}
+        </ul>
       )}
-      <button onClick={handleLogout}>Sign Out</button>
-      <button onClick={handleDeleteAccount}>Delete Account</button>
-      <button onClick={handleWorkout}>Workouts</button>
-      <button onClick={handleJoinClan}>Join Clan</button>
-      <button onClick={handleViewClan}>View Clans</button>
-      <button onClick={handleCreateClan}>Create Clan</button>
+
+      <div
+        style={{
+          marginTop: "20px",
+          display: "grid",
+          gridTemplateColumns: "repeat(3, 1fr)",
+          gap: "10px",
+        }}
+      >
+        <button onClick={handleNavigation("/")}>Dashboard</button>
+        <button onClick={handleNavigation("/workouts")}>Workouts</button>
+        <button onClick={handleNavigation("/joinclan")}>Join Clan</button>
+        <button onClick={handleNavigation("/viewClans")}>View Clans</button>
+        <button onClick={handleNavigation("/createClan")}>Create Clan</button>
+      </div>
     </div>
   );
 };

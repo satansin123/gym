@@ -1,70 +1,71 @@
 import React, { createContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useCookies } from "react-cookie";
-import { jwtDecode } from "jwt-decode"; // Fixed the import
+import axios from "axios";
+import { URL } from "./url";
 
 export const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [loading, setLoading] = useState(true); // Add a loading state
   const navigate = useNavigate();
-  const [cookies, setCookie, removeCookie] = useCookies(["uid"]);
 
-  const checkCookie = async () => {
-    const token = cookies.uid;
-    console.log("Checking token from cookies:", token); // Debugging statement
-    if (token) {
+  const PUBLIC_ROUTES = ["/login", "/signup"];
+
+  useEffect(() => {
+    const verifyUser = async () => {
       try {
-        const decoded = jwtDecode(token);
-        console.log("Decoded token:", decoded); // Debugging statement
-        setUser(decoded);
-        setIsAuthenticated(true); // Set authentication status to true
+        const response = await axios.get(`${URL}/auth/verify-token`, {
+          withCredentials: true,
+        });
+        setUser(response.data.user);
+        setIsAuthenticated(true);
       } catch (error) {
-        console.error("Error decoding token:", error);
-        removeCookie("uid", { path: "/" });
-        setIsAuthenticated(false); // Set authentication status to false
-        navigate("/login");
+        console.error("Token verification failed:", error.response?.data);
+        setUser(null);
+        setIsAuthenticated(false);
+        if (!PUBLIC_ROUTES.includes(window.location.pathname)) {
+          navigate("/login");
+        }
+      } finally {
+        setLoading(false);
       }
-    } else {
-      setIsAuthenticated(false); // Set authentication status to false
+    };
+    verifyUser();
+  }, [navigate]);
+
+  const login = async (email, password) => {
+    try {
+      const response = await axios.post(
+        `${URL}/auth/login`,
+        { email, password },
+        { withCredentials: true }
+      );
+      setUser(response.data.user);
+      setIsAuthenticated(true);
+      navigate("/");
+    } catch (error) {
+      console.error("Login error:", error);
+      throw error;
+    }
+  };
+
+  const logout = async () => {
+    try {
+      await axios.post(`${URL}/auth/logout`, {}, { withCredentials: true });
+      setUser(null);
+      setIsAuthenticated(false);
       navigate("/login");
+    } catch (error) {
+      console.error("Logout error:", error);
     }
   };
 
-  useEffect(() => {
-    checkCookie().then(() => {
-      setLoading(false); // Set loading to false when checkCookie completes
-    });
-  }, []);
+  if (loading) return <div>Loading...</div>;
 
-  const checkLocalStorage = () => {
-    const storedUser = JSON.parse(localStorage.getItem("user"));
-    if (storedUser) {
-      setUser(storedUser);
-      setIsAuthenticated(true); // Set authentication status to true
-    }
-  };
-
-  useEffect(() => {
-    checkLocalStorage();
-  }, []);
-
-  const handleLogout = () => {
-    removeCookie("uid");
-    setUser(null);
-    setIsAuthenticated(false); // Set authentication status to false
-    localStorage.removeItem("user");
-    navigate("/login");
-  };
-  if (loading) {
-    return <div>Loading...</div>; // Render a loading indicator while checking the cookie
-  }
   return (
-    <UserContext.Provider
-      value={{ user, isAuthenticated, setUser, handleLogout }}
-    >
+    <UserContext.Provider value={{ user, login, logout, isAuthenticated }}>
       {children}
     </UserContext.Provider>
   );

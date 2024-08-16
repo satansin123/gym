@@ -1,14 +1,19 @@
 const Notifications = require("../models/notificationModel");
-// const ClanUser = require("../models/clanUserModel");
 
 async function displayNotifications(req, res) {
   try {
-    const notification = await Notifications.find().sort({ createdAt: -1 });
+    const notifications = await Notifications.find()
+      .sort({ createdAt: -1 })
+      .limit(20); // Limit to last 20 notifications for performance
 
-    res.json(notification);
+    if (notifications.length === 0) {
+      return res.status(204).json({ message: "No notifications found" });
+    }
+
+    res.json(notifications);
   } catch (error) {
     console.error("Error getting notifications:", error);
-    res.status(500).json({ error: "Server error" });
+    res.status(500).json({ error: "Failed to retrieve notifications" });
   }
 }
 

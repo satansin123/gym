@@ -6,12 +6,13 @@ const logger = require("morgan");
 require("dotenv").config();
 const userRoutes = require("./routes/userRoute");
 const homeRoutes = require("./routes/homeRoute");
-const connectDB = require("./connect-atlas");
+const connectDB = require("./connect-local");
 const clanRoutes = require("./routes/clanRoute");
 const workoutRoutes = require("./routes/workoutRoutes");
 const calorieRoutes = require("./routes/calorieRoute");
 const notificationsRoutes = require("./routes/notificationsRoute");
 const adminRoutes = require("./routes/adminRoute");
+
 const cors = require("cors");
 const http = require("http");
 const socketIo = require("socket.io");
@@ -25,8 +26,9 @@ const app = express();
 const server = http.createServer(app);
 const io = socketIo(server, {
   cors: {
-    origin: `${URL}`,
+    origin: URL,
     methods: ["GET", "POST"],
+    credentials: true,
   },
 });
 
@@ -39,11 +41,10 @@ connectDB.once("open", () => {
 // Middleware setup
 app.use(
   cors({
-    origin: `${URL}`,
+    origin: URL,
     credentials: true,
   })
 );
-
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "jade");
 
@@ -54,13 +55,15 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
 
 // Route setup
-app.use("/", userRoutes);
-app.use("/", restrictToLoggedInUsersOnly, workoutRoutes);
-app.use("/", restrictToLoggedInUsersOnly, clanRoutes);
-app.use("/", restrictToLoggedInUsersOnly, homeRoutes);
-app.use("/", restrictToLoggedInUsersOnly, calorieRoutes);
-app.use("/", restrictToLoggedInUsersOnly, notificationsRoutes);
-app.use("/", adminRoutes);
+app.use("/auth", userRoutes);
+app.use("/", checkAuth);
+app.use("/", workoutRoutes);
+app.use("/", clanRoutes);
+app.use("/", homeRoutes);
+app.use("/", calorieRoutes);
+app.use("/", notificationsRoutes);
+app.use("/admin", adminRoutes);
+
 // Example middleware to redirect based on authentication
 app.get("/", checkAuth, (req, res) => {
   if (req.user) {
