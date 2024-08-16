@@ -18,9 +18,8 @@ async function postNotifications(req, res) {
 
 async function getUserCount(req, res) {
   try {
-    const userCount = await User.find().count();
-
-    res.status(201).json(userCount);
+    const userCount = await User.countDocuments(); // Changed for consistency and correctness
+    res.status(200).json({ userCount }); // Changed status code to 200 for successful GET request
   } catch (error) {
     console.error("Error getting number of users:", error);
     res.status(500).json({ error: "Server error" });
@@ -30,8 +29,11 @@ async function getUserCount(req, res) {
 async function deleteNotification(req, res) {
   try {
     const id = req.params.id;
-    await Notification.findByIdAndDelete(id);
-    res.status(201).json({ data: "successfully deleted" });
+    const deletedNotification = await Notification.findByIdAndDelete(id);
+    if (!deletedNotification) {
+      return res.status(404).json({ error: "Notification not found" });
+    }
+    res.status(200).json({ message: "Successfully deleted" });
   } catch (error) {
     console.error("Error deleting notification:", error);
     res.status(500).json({ error: "Server error" });

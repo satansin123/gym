@@ -8,6 +8,6 @@ const {
 
 router.post("/notifications", postNotifications);
 router.delete("/notifications/:id", deleteNotification);
-router.get("/users", getUserCount);
+router.get("/getUsers", getUserCount);
 
 module.exports = router;

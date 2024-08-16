@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { URL } from "../url"; // Assuming URL is defined in this module
 
 const ViewUsers = () => {
   const [users, setUsers] = useState([]);
@@ -8,10 +9,17 @@ const ViewUsers = () => {
   const [showPopup, setShowPopup] = useState(false);
   const navigate = useNavigate();
 
+  useEffect(() => {
+    handleView();
+  }, []);
+
   const handleView = async () => {
     try {
-      const response = await axios.post("http://localhost:8000/fetchAllUsers");
-      console.log(response.data);
+      const response = await axios.post(
+        `${URL}/auth/fetchAllUsers`,
+        {},
+        { withCredentials: true }
+      );
       if (Array.isArray(response.data.users)) {
         setUsers(response.data.users);
       } else {
@@ -38,14 +46,7 @@ const ViewUsers = () => {
         <h1 className="text-3xl font-bold mb-6 text-gray-800 text-center">
           User Details
         </h1>
-        <button
-          onClick={handleView}
-          className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors block mx-auto"
-        >
-          View User Details
-        </button>
-
-        {users.length > 0 && (
+        {users.length > 0 ? (
           <div className="mt-6 overflow-x-auto w-full">
             <table className="min-w-full bg-white border border-gray-300 rounded-lg mx-auto">
               <thead>
@@ -60,7 +61,9 @@ const ViewUsers = () => {
               <tbody>
                 {users.map((user) => (
                   <tr key={user._id} className="hover:bg-gray-100">
-                    <td className="px-4 py-2 border-b">{user._id.toString()}</td>
+                    <td className="px-4 py-2 border-b">
+                      {user._id.toString()}
+                    </td>
                     <td className="px-4 py-2 border-b">{user.name}</td>
                     <td className="px-4 py-2 border-b">{user.email}</td>
                     <td className="px-4 py-2 border-b">
@@ -79,6 +82,8 @@ const ViewUsers = () => {
               </tbody>
             </table>
           </div>
+        ) : (
+          <p className="text-center text-gray-600">No users found.</p>
         )}
       </div>
 
