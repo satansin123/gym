@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 // MongoDB connection string
-const uri = "mongodb+srv://<username>:<password>@gym.kx9gshr.mongodb.net/gym";
+const uri = process.env.UR;
 
 // MongoDB connection options
 const options = {
