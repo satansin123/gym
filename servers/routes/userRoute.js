@@ -6,7 +6,8 @@ const {
   handleSignOut,
   deleteUser,
   verifyToken,
-  fetchAllUsers,getUsername
+  fetchAllUsers,
+  getUsername,
 } = require("../controllers/userControllers");
 
 router.post("/signup", handleSignUp);

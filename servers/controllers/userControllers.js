@@ -7,8 +7,6 @@ const { setUser, getUser } = require("../services/userServiceToken");
 const saltRounds = 12;
 
 async function getUsername(req, res) {
-  
-
   try {
     const { userId } = req.body;
 
@@ -18,7 +16,7 @@ async function getUsername(req, res) {
     }
 
     // Fetch user from the database (replace User with your Mongoose model)
-    const user2 = await User.findById(userId).select('email'); // Only select the 'name' field
+    const user2 = await User.findById(userId).select("email"); // Only select the 'name' field
 
     // Check if user exists
     if (!user2) {
@@ -236,4 +234,5 @@ module.exports = {
   deleteUser,
   verifyToken,
   fetchAllUsers,
+  getUsername,
 };

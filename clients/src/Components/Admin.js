@@ -6,10 +6,6 @@ import { URL } from "../url";
 import { useNavigate } from "react-router-dom";
 
 const Admin = () => {
-  useEffect(() => {
-    showNotifications();
-    // getUserCount();
-  }, []);
   const [loading, setLoading] = useState(false);
   const [notifications, setNotifications] = useState([]);
   const [notifTitle, setNotifTitle] = useState("");
@@ -33,8 +29,8 @@ const Admin = () => {
       });
       setNotifications(Array.isArray(res.data) ? res.data : []);
     } catch (err) {
-      console.log(err);
-      setNotifications([]); // Ensure notifications is an empty array on error
+      console.error("Error fetching notifications:", err);
+      setNotifications([]);
     } finally {
       setLoading(false);
     }
@@ -48,8 +44,11 @@ const Admin = () => {
         { withCredentials: true }
       );
       showNotifications();
+      setNotifTitle("");
+      setNotifDetails("");
     } catch (err) {
-      console.log(err);
+      console.error("Error posting notification:", err);
+      // You might want to show an error message to the user here
     }
   };
 
@@ -64,18 +63,20 @@ const Admin = () => {
       });
       showNotifications();
     } catch (err) {
-      console.log(err);
+      console.error("Error deleting notification:", err);
+      // You might want to show an error message to the user here
     }
   };
 
   const getUserCount = async () => {
     try {
-      const res = await axios.get(`${URL}/admin/getUsers`, {
+      const res = await axios.get(`${URL}/auth/fetchAllUsers`, {
         withCredentials: true,
       });
-      setUserCount(res.data.userCount); // Updated to match the response format
+      setUserCount(res.data.users.length);
     } catch (err) {
-      console.log(err);
+      console.error("Error fetching user count:", err);
+      setUserCount("N/A");
     }
   };
 
