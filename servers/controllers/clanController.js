@@ -65,11 +65,10 @@ async function createClan(req, res) {
 async function sendMessage(req, res) {
   try {
     const { clanName, message } = req.body;
-    const userId = req.user.id; // Assuming req.user contains the authenticated user's details
-
+    const userEmail = req.user.email; // Assuming req.user contains the authenticated user's details
     // Ensure message is correctly structured based on MessageSchema
     const newMessage = {
-      sender: userId, // Assuming userId is the ObjectId of the sender (User model)
+      senderEmail: userEmail, // Assuming userId is the ObjectId of the sender (User model)
       content: message.content,
       timestamp: message.timestamp || Date.now(), // Use provided timestamp or default to current time
     };
@@ -82,7 +81,6 @@ async function sendMessage(req, res) {
       },
       { new: true, upsert: false } // Ensure upsert is false to avoid creating new documents
     );
-
     res.status(200).send("Message added succesfully "); // Send updated clan data back to the client
     console.log("Mesage added succesfully",newMessage)// Send updated clan data back to the client
   } catch (error) {

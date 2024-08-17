@@ -6,6 +6,10 @@ import { URL } from "../url";
 import { useNavigate } from "react-router-dom";
 
 const Admin = () => {
+  useEffect(() => {
+    showNotifications();
+    // getUserCount();
+  }, []);
   const [loading, setLoading] = useState(false);
   const [notifications, setNotifications] = useState([]);
   const [notifTitle, setNotifTitle] = useState("");

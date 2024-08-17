@@ -3,6 +3,8 @@ import io from "socket.io-client";
 import axios from "axios";
 import { useLocation } from "react-router-dom";
 import { URL } from "../url";
+
+// Initialize Socket.IO client
 const socket = io(`${URL}`);
 
 const Chat = () => {
@@ -14,25 +16,20 @@ const Chat = () => {
   const messagesEndRef = useRef(null);
 
   useEffect(() => {
-    //useEffect helps fetch data and change the webpage after it has been rendered once
+    // Fetch recent chats on mount
     const fetchRecentChats = async () => {
       try {
-        const response = await axios.post(`${URL}/clanChat`, {
-          clanName: clanName,
-        });
-
-        const newMessages = response.data.map((item) => ({
+        const response = await axios.post(`${URL}/clanChat`, { clanName });
+        const newMessages = response.data.map(item => ({
           content: item.content,
-          sender: item.sender,
+          sender: item.senderEmail,
           timestamp: item.timestamp,
         }));
-
-        setMessages(newMessages); // Set messages directly
-
-        console.log(response.data);
+        console.log(newMessages)
+        setMessages(newMessages);
       } catch (error) {
         if (error.response && error.response.status === 404) {
-          alert("fuck");
+          alert("Chat not found");
         }
         console.error("Error fetching recent chats:", error);
       }
@@ -40,24 +37,25 @@ const Chat = () => {
 
     fetchRecentChats();
 
+    // Set up socket event listeners
     socket.on("a user joined", () => {
-      setMessages((prevMessages) => [
+      setMessages(prevMessages => [
         ...prevMessages,
-        { content: "a user joined" },
+        { content: "A user joined", sender: "System", timestamp: new Date().toISOString() }
       ]);
       scrollToBottom();
     });
 
     socket.on("disconnected", () => {
-      setMessages((prevMessages) => [
+      setMessages(prevMessages => [
         ...prevMessages,
-        { content: "a user disconnected" },
+        { content: "A user disconnected", sender: "System", timestamp: new Date().toISOString() }
       ]);
       scrollToBottom();
     });
 
     socket.on("chat message", (msg) => {
-      setMessages((prevMessages) => [...prevMessages, msg]);
+      setMessages(prevMessages => [...prevMessages, msg]);
       scrollToBottom();
     });
 
@@ -66,26 +64,21 @@ const Chat = () => {
       socket.off("disconnected");
       socket.off("chat message");
     };
-  }, []);
+  }, [clanName]);
 
   const sendMessage = async (e) => {
     e.preventDefault();
     if (messageInput.trim()) {
-      //.trim() is a JavaScript string method that removes whitespace characters (spaces, tabs, newlines) from both ends of a string
       const newMessage = {
         content: messageInput,
         sender: "You",
-        timestamp: new Date().toISOString(), //ISO 8601 format (YYYY-MM-DDTHH:mm:ss.sssZ).
+        timestamp: new Date().toISOString(),
       };
       try {
-        await axios.post(`${URL}/sendMessage`, {
-          clanName: clanName,
-          message: newMessage,
-        });
-
+        await axios.post(`${URL}/sendMessage`, { clanName, message: newMessage });
         socket.emit("chat message", newMessage);
         setMessageInput("");
-        scrollToBottom(); // Scroll to bottom after sending message
+        scrollToBottom();
       } catch (error) {
         console.error("Error sending message:", error);
       }
@@ -101,8 +94,7 @@ const Chat = () => {
       <ul id="messages">
         {messages.map((msg, index) => (
           <li key={index}>
-            <strong>{msg.sender}</strong> (
-            {new Date(msg.timestamp).toLocaleString()}): {msg.content}
+            <strong>{msg.sender}</strong> ({new Date(msg.timestamp).toLocaleString()}): {msg.content}
           </li>
         ))}
         <div ref={messagesEndRef} /> {/* Scroll to bottom ref */}
@@ -120,8 +112,6 @@ const Chat = () => {
         body {
           margin: 0;
           padding-bottom: 3rem;
-          font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-            Helvetica, Arial, sans-serif;
         }
 
         #form {
@@ -165,9 +155,8 @@ const Chat = () => {
           margin: 0;
           padding: 0;
           overflow-y: auto;
-          max-height: calc(
-            100vh - 120px
-          ); /* Adjust max height as per your design */
+          max-height: calc(100vh - 3rem); /* Space for the form input */
+          scroll-behavior: smooth; /* Enable smooth scrolling */
         }
 
         #messages > li {
