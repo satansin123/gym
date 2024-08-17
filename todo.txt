@@ -1,19 +1,10 @@
-cookies time limit set
-
-understand components of clanchat like use effect etc
-
-
 fix auto scroll formatting
 add feature such that user name appears instead of user id
 
+calorie
+    --- food corresponding calories (that api hackathon thing)
 
-
-ann error when i send a message on one clan it appearson ui to go to all clans but it doesnt
-
-
-merge conflicts
-
-add a filter feature where u can filter workouts by date
-
-app.js
-package lock json in frontend
+-- fix auto scroll clanchat
+-- clanchat names
+-- add a filter feature where u can filter workouts by date
+-- admin database and 2step auth

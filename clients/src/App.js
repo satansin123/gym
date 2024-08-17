@@ -14,12 +14,14 @@ import ClanChat from "./Components/ClanChat"; // Added from ali
 import { UserProvider } from "./UserContext";
 import PrivateRoute from "./Components/PrivateRoute"; // Changed to Components
 import CalorieTracker from "./Components/Calorietracker";
+import viewNutrition from "./Components/ViewNutrition";
 
 import axios from "axios";
 import Notifications from "./Components/Notifications";
 import Admin from "./Components/Admin";
 import "./App.css";
 import "./Basic.css";
+import ViewNutrition from "./Components/ViewNutrition";
 
 axios.defaults.withCredentials = true; // Allows cookies to be sent by default in axios req body
 
@@ -64,6 +66,14 @@ const App = () => {
                 element={
                   <PrivateRoute>
                     <CalorieTracker />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/viewNutrition"
+                element={
+                  <PrivateRoute>
+                    <ViewNutrition />
                   </PrivateRoute>
                 }
               />

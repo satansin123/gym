@@ -5,6 +5,33 @@ const { setUser, getUser } = require("../services/userServiceToken");
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
 
+async function getUsername(req, res) {
+  
+
+  try {
+    const { userId } = req.body;
+
+    // Validate userId
+    if (!userId) {
+      return res.status(400).json({ message: "User ID is required" });
+    }
+
+    // Fetch user from the database (replace User with your Mongoose model)
+    const user2 = await User.findById(userId).select('email'); // Only select the 'name' field
+
+    // Check if user exists
+    if (!user2) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Respond with the username
+    return res.json({ username: user2.email });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Server error" });
+  }
+}
+
 async function fetchAllUsers(req, res) {
   try {
     const users = await User.find({});
@@ -135,4 +162,4 @@ async function deleteUser(req, res) {
   }
 }
 
-module.exports = { handleSignUp, handleLogin, handleSignOut, deleteUser,fetchAllUsers };
+module.exports = { handleSignUp, handleLogin, handleSignOut, deleteUser,fetchAllUsers ,getUsername};

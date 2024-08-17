@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 const Admin = () => {
   useEffect(() => {
     showNotifications();
-    getUserCount();
+    // getUserCount();
   }, []);
   const [loading, setLoading] = useState(false);
   const [notifications, setNotifications] = useState([]);
@@ -58,17 +58,17 @@ const Admin = () => {
     }
   };
 
-  const getUserCount = async () => {
-    try {
-      const res = await axios.get(`${URL}/users`, {
-        withCredentials: true,
-      });
-      setUserCount(res.data);
-      console.log("Number of users:", res.data);
-    } catch (err) {
-      console.log(err);
-    }
-  };
+  // const getUserCount = async () => {
+  //   try {
+  //     const res = await axios.get(`${URL}/users`, {
+  //       withCredentials: true,
+  //     });
+  //     setUserCount(res.data);
+  //     console.log("Number of users:", res.data);
+  //   } catch (err) {
+  //     console.log(err);
+  //   }
+  // };
 
   const { user, handleLogout } = useContext(UserContext);
   const [, , removeCookie] = useCookies(["uid"]);

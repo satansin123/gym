@@ -7,13 +7,14 @@ const {
   handleLogin,
   handleSignOut,
   deleteUser,
-  fetchAllUsers,
+  fetchAllUsers,getUsername
 } = require("../controllers/userControllers");
 
 router.post("/signup", handleSignUp);
 router.post("/login", handleLogin);
 router.get("/logout", handleSignOut);
 router.post("/deleteUser", deleteUser);
+router.post("/getUsername", getUsername);
 router.post("/fetchAllUsers", fetchAllUsers);
 
 

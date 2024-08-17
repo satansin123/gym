@@ -19,6 +19,10 @@ const CalorieSchema = new Schema({
     enum: ["breakfast", "lunch", "dinner", "others"],
     required: true,
   },
+  timeOfMeal: {
+    type: Date,
+    default: Date.now,
+  }
 });
 
 module.exports = mongoose.model("Calorie", CalorieSchema);
