@@ -14,6 +14,6 @@ router.post("/login", handleLogin);
 router.post("/logout", handleSignOut);
 router.post("/deleteUser", deleteUser);
 router.get("/verify-token", verifyToken);
-router.post("/fetchAllUsers", fetchAllUsers);
+router.get("/fetchAllUsers", fetchAllUsers);
 
 module.exports = router;

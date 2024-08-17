@@ -15,7 +15,7 @@ const ViewUsers = () => {
 
   const handleView = async () => {
     try {
-      const response = await axios.post(
+      const response = await axios.get(
         `${URL}/auth/fetchAllUsers`,
         {},
         { withCredentials: true }

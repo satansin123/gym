@@ -12,14 +12,14 @@ async function fetchAllUsers(req, res) {
     if (!users || users.length === 0) {
       return res.status(409).json({ error: "No users registered" });
     }
-  
+
     // Process each user to attach clan information
     for (const user of users) {
       const id = user._id;
-      const clans = await ClanUser.find({ uid: id }) || []; // Fetch clans associated with the user ID
-  
+      const clans = (await ClanUser.find({ uid: id })) || []; // Fetch clans associated with the user ID
+
       let temp;
-  
+
       if (clans.length > 0) {
         const clanData = clans[0]; // Access the first ClanUser document
         temp = {
@@ -32,18 +32,17 @@ async function fetchAllUsers(req, res) {
           clanNames: [],
         };
       }
-  
+
       // Attach clan data to user object (temporary, not saved to DB)
       user._doc.clans = temp; // Use _doc to avoid schema restrictions
     }
-  
+
     console.log(users); // Log the users array with clan data
     return res.json({ users }); // Send the updated users array as response
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: "Server error" });
   }
-  
 }
 
 async function handleSignUp(req, res) {

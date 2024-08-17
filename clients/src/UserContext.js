@@ -11,7 +11,7 @@ export const UserProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const navigate = useNavigate();
 
-  const PUBLIC_ROUTES = ["/login", "/signup", "/admin", "/viewusers"];
+  const PUBLIC_ROUTES = ["/login", "/signup", "/admin", "/viewUsers"];
 
   useEffect(() => {
     const verifyUser = async () => {
