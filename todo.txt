@@ -5,6 +5,4 @@ calorie
     --- food corresponding calories (that api hackathon thing)
 
 -- fix auto scroll clanchat
--- clanchat names
--- add a filter feature where u can filter workouts by date
 -- admin database and 2step auth
