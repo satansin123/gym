@@ -116,8 +116,8 @@ async function handleLogin(req, res) {
 
     res.cookie("uid", token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
+      secure: true, // Use true if your frontend is served over HTTPS
+      sameSite: "None", // Important for cross-site cookies
       maxAge: 24 * 60 * 60 * 1000, // 1 day
     });
 
@@ -132,7 +132,7 @@ async function handleLogin(req, res) {
 }
 
 async function verifyToken(req, res) {
-  const token = req.cookies?.uid;
+  const token = req.cookies?.uid || req.headers["authorization"]?.split(" ")[1];
   if (!token) {
     return res.status(401).json({ error: "No token provided" });
   }

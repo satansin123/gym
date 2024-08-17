@@ -18,6 +18,7 @@ import CalorieTracker from "./Components/Calorietracker";
 import viewNutrition from "./Components/ViewNutrition";
 
 import axios from "axios";
+
 import Notifications from "./Components/Notifications";
 import Admin from "./Components/Admin";
 import "./App.css";
