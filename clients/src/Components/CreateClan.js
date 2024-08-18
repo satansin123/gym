@@ -10,7 +10,7 @@ function CreateClan() {
 
   const handleSubmit = async () => {
     try {
-      const response = await axios.post(`${URL}/user`, { clanName });
+      const response = await axios.post(`${URL}/createClan`, { clanName });
       console.log("Clan Created Successfully!");
       alert(`${clanName} created successfully`);
     } catch (error) {
