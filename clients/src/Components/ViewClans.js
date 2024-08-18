@@ -1,55 +1,52 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { URL } from "../url";
+
 function ViewClans() {
   const [clanNames, setClanNames] = useState([]);
-  const [clanChat, setClanChat] = useState(null);
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    fetchClans();
+  }, []);
 
   const fetchClans = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(`${URL}/viewClans/user`,
-      );
-      setClanNames(response.data); // Assuming response.data is an array of clan names
+      const response = await axios.get(`${URL}/viewClans/user`);
+      setClanNames(response.data);
     } catch (error) {
-      alert(error.message);
-      console.error("There was an error!", error);
+      console.error("Error fetching clans:", error);
+      alert("Failed to fetch clans. Please try again.");
     } finally {
       setLoading(false);
     }
   };
-  const navigate = useNavigate();
 
-  const handleButtonClick = async (clanName) => {
-    try {
-      setLoading(true);
-
-      navigate("/clanChat", { state: { clanName: clanName } });
-    } catch (error) {
-      console.error("There was an error fetching the clan chat!", error);
-    } finally {
-      setLoading(false);
-    }
+  const handleViewChats = (clanName) => {
+    navigate("/clanChat", { state: { clanName } });
   };
 
   return (
     <div>
-      <h2>View Clans Page</h2>
-      <button onClick={fetchClans} disabled={loading}>
-        {loading ? "Loading..." : "Fetch Clans"}
-      </button>
-      <ul>
-        {clanNames.map((clanName, index) => (
-          <li key={index}>
-            {clanName}
-            <button onClick={() => handleButtonClick(clanName)}>
-              View Chats
-            </button>
-          </li>
-        ))}
-      </ul>
+      <h2>View Clans</h2>
+      {loading ? (
+        <p>Loading clans...</p>
+      ) : (
+        <ul>
+          {clanNames.map((clanName, index) => (
+            <li key={index}>
+              {clanName}
+              <button onClick={() => handleViewChats(clanName)}>
+                View Chats
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
+      {!loading && clanNames.length === 0 && <p>No clans found.</p>}
     </div>
   );
 }
