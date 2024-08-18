@@ -19,6 +19,7 @@ function CreateClan() {
     setLoading(true);
     try {
       const response = await axios.post(`${URL}/createClan`, { clanName });
+      console.log("Clan Created Successfully!");
       alert(`${clanName} created successfully`);
       setClanName("");
     } catch (error) {
