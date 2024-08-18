@@ -66,6 +66,7 @@ async function sendMessage(req, res) {
   try {
     const { clanName, message } = req.body;
     const userEmail = req.user.email; // Assuming req.user contains the authenticated user's details
+    console.log(req.user);
     // Ensure message is correctly structured based on MessageSchema
     const newMessage = {
       senderEmail: userEmail, // Assuming userId is the ObjectId of the sender (User model)
@@ -98,7 +99,6 @@ async function joinClan(req, res) {
     }
 
     const user = req.user;
-
     const userId = user.id;
 
     const steps = user.steps;

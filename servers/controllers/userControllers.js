@@ -108,7 +108,7 @@ async function handleLogin(req, res) {
     if (!user || !(await bcrypt.compare(password, user.password))) {
       return res.status(401).json({ error: "Invalid email or password" });
     }
-
+    console.log(user)
     const token = setUser(user);
     if (!token) {
       return res.status(500).json({ error: "Error generating token" });

@@ -160,6 +160,7 @@
     "semver": "^7.6.2",
     "send": "^0.18.0",
     "serve-static": "^1.15.0",
+    "servers": "file:",
     "set-blocking": "^2.0.0",
     "set-function-length": "^1.2.2",
     "setprototypeof": "^1.2.0",
@@ -199,7 +200,7 @@
     "yallist": "^4.0.0"
   },
   "scripts": {
-    "start": "nodemon ./bin/www",
+    "start": "nodemon app",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
