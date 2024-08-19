@@ -108,7 +108,7 @@ async function handleLogin(req, res) {
     if (!user || !(await bcrypt.compare(password, user.password))) {
       return res.status(401).json({ error: "Invalid email or password" });
     }
-    console.log(user)
+    console.log(user);
     const token = setUser(user);
     if (!token) {
       return res.status(500).json({ error: "Error generating token" });
@@ -138,12 +138,21 @@ async function verifyToken(req, res) {
   }
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const user = await User.findById(decoded.id).select("-password");
+    console.log(decoded);
+    const user = await User.findById(decoded.id, "email name role").select(
+      "-password"
+    );
     if (!user) {
       return res.status(401).json({ error: "User not found" });
     }
+    console.log(user);
     return res.json({
-      user: { id: user._id, email: user.email, name: user.name },
+      user: {
+        id: user._id,
+        email: user.email,
+        name: user.name,
+        role: user.role,
+      },
     });
   } catch (error) {
     console.error("Token verification error:", error);
@@ -189,86 +198,10 @@ async function deleteUser(req, res) {
     return res.status(500).json({ error: "Internal Server Error" });
   }
 }
-async function fetchAllUsers(req, res) {
-  try {
-    const users = await User.find({}).select("-password");
-    if (!users || users.length === 0) {
-      return res.status(409).json({ error: "No users registered" });
-    }
 
-    // Process each user to attach clan information
-    for (const user of users) {
-      const id = user._id;
-      const clans = (await ClanUser.find({ uid: id })) || [];
 
-      let temp = {
-        clanIds: clans.length > 0 ? clans[0].clanIds : [],
-        clanNames: clans.length > 0 ? clans[0].clanNames : [],
-      };
 
-      user._doc.clans = temp;
-    }
 
-    return res.json({ users });
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({ error: "Server error" });
-  }
-}
-
-// New function to promote user to admin
-async function promoteToAdmin(req, res) {
-  try {
-    const { userId } = req.params;
-    const updatedUser = await User.findByIdAndUpdate(
-      userId,
-      { role: "admin" },
-      { new: true }
-    ).select("-password");
-
-    if (!updatedUser) {
-      return res.status(404).json({ error: "User not found" });
-    }
-
-    return res.json({ message: "User promoted to admin", user: updatedUser });
-  } catch (error) {
-    console.error("Error promoting user to admin:", error);
-    return res.status(500).json({ error: "Server error" });
-  }
-}
-
-// New function to demote admin to user
-async function demoteToUser(req, res) {
-  try {
-    const { userId } = req.params;
-    const updatedUser = await User.findByIdAndUpdate(
-      userId,
-      { role: "user" },
-      { new: true }
-    ).select("-password");
-
-    if (!updatedUser) {
-      return res.status(404).json({ error: "User not found" });
-    }
-
-    return res.json({ message: "Admin demoted to user", user: updatedUser });
-  } catch (error) {
-    console.error("Error demoting admin to user:", error);
-    return res.status(500).json({ error: "Server error" });
-  }
-}
-
-// New function to get user counts
-async function getUserCounts(req, res) {
-  try {
-    const userCount = await User.countDocuments({ role: "user" });
-    const adminCount = await User.countDocuments({ role: "admin" });
-    return res.json({ userCount, adminCount });
-  } catch (error) {
-    console.error("Error getting user counts:", error);
-    return res.status(500).json({ error: "Server error" });
-  }
-}
 
 module.exports = {
   handleSignUp,
@@ -278,7 +211,4 @@ module.exports = {
   verifyToken,
   fetchAllUsers,
   getUsername,
-  promoteToAdmin,
-  demoteToUser,
-  getUserCounts,
 };

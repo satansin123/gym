@@ -4,6 +4,91 @@ import { UserContext } from "../UserContext";
 import { URL } from "../url";
 import { useNavigate } from "react-router-dom";
 
+const NotificationSection = ({
+  notifications,
+  notifTitle,
+  notifDetails,
+  setNotifTitle,
+  setNotifDetails,
+  handlePostNotification,
+  handleNotificationDelete,
+  loading,
+}) => (
+  <div>
+    <h3>Post New Notification</h3>
+    <input
+      type="text"
+      placeholder="Notification Title"
+      value={notifTitle}
+      onChange={(e) => setNotifTitle(e.target.value)}
+    />
+    <textarea
+      placeholder="Notification Details"
+      value={notifDetails}
+      onChange={(e) => setNotifDetails(e.target.value)}
+    />
+    <button onClick={handlePostNotification} disabled={loading}>
+      {loading ? "Posting..." : "Post Notification"}
+    </button>
+
+    <h3>Current Notifications</h3>
+    {loading ? (
+      <p>Loading...</p>
+    ) : (
+      <ul>
+        {notifications.map((notification) => (
+          <li key={notification._id}>
+            <strong>{notification.title}</strong> - {notification.details}
+            <button
+              onClick={() => handleNotificationDelete(notification._id)}
+              disabled={loading}
+            >
+              Delete
+            </button>
+          </li>
+        ))}
+      </ul>
+    )}
+  </div>
+);
+
+const UserManagementSection = ({
+  users,
+  handlePromoteUser,
+  handleDemoteUser,
+  loading,
+}) => (
+  <div>
+    <h3>User Management</h3>
+    {loading ? (
+      <p>Loading users...</p>
+    ) : (
+      <ul>
+        {users.map((user) => (
+          <li key={user._id}>
+            {user.name} ({user.email}) - Role: {user.role}
+            {user.role === "user" ? (
+              <button
+                onClick={() => handlePromoteUser(user._id)}
+                disabled={loading}
+              >
+                Promote to Admin
+              </button>
+            ) : (
+              <button
+                onClick={() => handleDemoteUser(user._id)}
+                disabled={loading}
+              >
+                Demote to User
+              </button>
+            )}
+          </li>
+        ))}
+      </ul>
+    )}
+  </div>
+);
+
 const Admin = () => {
   const [loading, setLoading] = useState(false);
   const [notifications, setNotifications] = useState([]);
@@ -26,6 +111,7 @@ const Admin = () => {
   }, [user, navigate]);
 
   const showNotifications = async () => {
+    setLoading(true);
     try {
       const res = await axios.get(`${URL}/admin/notifications`, {
         withCredentials: true,
@@ -33,11 +119,13 @@ const Admin = () => {
       setNotifications(Array.isArray(res.data) ? res.data : []);
     } catch (err) {
       console.error("Error fetching notifications:", err);
-      throw err;
+    } finally {
+      setLoading(false);
     }
   };
 
   const handlePostNotification = async () => {
+    setLoading(true);
     try {
       await axios.post(
         `${URL}/admin/notifications`,
@@ -49,10 +137,13 @@ const Admin = () => {
       setNotifDetails("");
     } catch (err) {
       console.error("Error posting notification:", err);
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleNotificationDelete = async (id) => {
+    setLoading(true);
     try {
       await axios.delete(`${URL}/admin/notifications/${id}`, {
         withCredentials: true,
@@ -60,10 +151,13 @@ const Admin = () => {
       showNotifications();
     } catch (err) {
       console.error("Error deleting notification:", err);
+    } finally {
+      setLoading(false);
     }
   };
 
   const getUserCount = async () => {
+    setLoading(true);
     try {
       const res = await axios.get(`${URL}/admin/user-counts`, {
         withCredentials: true,
@@ -71,11 +165,13 @@ const Admin = () => {
       setUserCount({ users: res.data.userCount, admins: res.data.adminCount });
     } catch (err) {
       console.error("Error fetching user count:", err);
-      throw err;
+    } finally {
+      setLoading(false);
     }
   };
 
   const fetchUsers = async () => {
+    setLoading(true);
     try {
       const res = await axios.get(`${URL}/admin/users`, {
         withCredentials: true,
@@ -83,14 +179,16 @@ const Admin = () => {
       setUsers(res.data.users);
     } catch (err) {
       console.error("Error fetching users:", err);
-      throw err;
+    } finally {
+      setLoading(false);
     }
   };
 
   const handlePromoteUser = async (userId) => {
+    setLoading(true);
     try {
-      await axios.put(
-        `${URL}/auth/promote/${userId}`,
+      await axios.post(
+        `${URL}/admin/promote/${userId}`,
         {},
         { withCredentials: true }
       );
@@ -98,13 +196,16 @@ const Admin = () => {
       getUserCount();
     } catch (err) {
       console.error("Error promoting user:", err);
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleDemoteUser = async (userId) => {
+    setLoading(true);
     try {
-      await axios.put(
-        `${URL}/auth/demote/${userId}`,
+      await axios.post(
+        `${URL}/admin/demote/${userId}`,
         {},
         { withCredentials: true }
       );
@@ -112,9 +213,11 @@ const Admin = () => {
       getUserCount();
     } catch (err) {
       console.error("Error demoting user:", err);
+    } finally {
+      setLoading(false);
     }
   };
-  console.log("hi");
+
   return (
     <div>
       <h1>Admin Dashboard</h1>
@@ -122,55 +225,23 @@ const Admin = () => {
       <p>Regular Users: {userCount.users}</p>
       <p>Admins: {userCount.admins}</p>
 
-      <h3>Post new Notification</h3>
-      <input
-        type="text"
-        placeholder="Notification Title"
-        value={notifTitle}
-        onChange={(e) => setNotifTitle(e.target.value)}
+      <NotificationSection
+        notifications={notifications}
+        notifTitle={notifTitle}
+        notifDetails={notifDetails}
+        setNotifTitle={setNotifTitle}
+        setNotifDetails={setNotifDetails}
+        handlePostNotification={handlePostNotification}
+        handleNotificationDelete={handleNotificationDelete}
+        loading={loading}
       />
-      <textarea
-        placeholder="Notification Details"
-        value={notifDetails}
-        onChange={(e) => setNotifDetails(e.target.value)}
+
+      <UserManagementSection
+        users={users}
+        handlePromoteUser={handlePromoteUser}
+        handleDemoteUser={handleDemoteUser}
+        loading={loading}
       />
-      <button onClick={handlePostNotification}>Post Notification</button>
-
-      <h3>Current Notifications</h3>
-      {loading ? (
-        <p>Loading...</p>
-      ) : (
-        <ul>
-          {notifications.map((notification) => (
-            <li key={notification._id}>
-              <strong>{notification.title}</strong> - {notification.details}
-              <button
-                onClick={() => handleNotificationDelete(notification._id)}
-              >
-                Delete
-              </button>
-            </li>
-          ))}
-        </ul>
-      )}
-
-      <h3>User Management</h3>
-      <ul>
-        {users.map((user) => (
-          <li key={user._id}>
-            {user.name} ({user.email}) - Role: {user.role}
-            {user.role === "user" ? (
-              <button onClick={() => handlePromoteUser(user._id)}>
-                Promote to Admin
-              </button>
-            ) : (
-              <button onClick={() => handleDemoteUser(user._id)}>
-                Demote to User
-              </button>
-            )}
-          </li>
-        ))}
-      </ul>
     </div>
   );
 };

@@ -4,7 +4,7 @@
   "description": "to run",
   "scripts": {
     "start": "concurrently \"npm run start-server\" \"npm run start-client\"",
-    "start-server": "cd servers && node app",
+    "start-server": "cd servers && npm start",
     "start-client": "cd clients && npm start"
   },
   "author": "",
