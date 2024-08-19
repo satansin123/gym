@@ -12,7 +12,7 @@ export const UserProvider = ({ children }) => {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
-  const PUBLIC_ROUTES = ["/login", "/signup", "/admin", "/viewUsers"];
+  const PUBLIC_ROUTES = ["/login", "/signup", "/viewUsers", "/admin"];
 
   useEffect(() => {
     const verifyUser = async () => {
@@ -20,6 +20,7 @@ export const UserProvider = ({ children }) => {
         const response = await axios.get(`${URL}/auth/verify-token`, {
           withCredentials: true,
         });
+        console.log("User role:", response);
         setUser(response.data.user);
         setIsAuthenticated(true);
         setError(null);
@@ -46,6 +47,7 @@ export const UserProvider = ({ children }) => {
           { email, password },
           { withCredentials: true }
         );
+
         setUser(response.data.user);
         setIsAuthenticated(true);
         setError(null);

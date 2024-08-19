@@ -49,6 +49,9 @@ const Dashboard = () => {
         <button onClick={handleNavigation("/notifications")}>
           Notifications
         </button>
+        <button type="button" onClick={() => navigate("/admin")}>
+        Admin
+      </button>
       </div>
       <div style={{ marginTop: "20px" }}>
         <button onClick={logout} style={{ marginRight: "10px" }}>

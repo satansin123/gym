@@ -108,7 +108,7 @@ async function handleLogin(req, res) {
     if (!user || !(await bcrypt.compare(password, user.password))) {
       return res.status(401).json({ error: "Invalid email or password" });
     }
-
+    console.log(user);
     const token = setUser(user);
     if (!token) {
       return res.status(500).json({ error: "Error generating token" });
@@ -138,12 +138,21 @@ async function verifyToken(req, res) {
   }
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const user = await User.findById(decoded.id).select("-password");
+    console.log(decoded);
+    const user = await User.findById(decoded.id, "email name role").select(
+      "-password"
+    );
     if (!user) {
       return res.status(401).json({ error: "User not found" });
     }
+    console.log(user);
     return res.json({
-      user: { id: user._id, email: user.email, name: user.name },
+      user: {
+        id: user._id,
+        email: user.email,
+        name: user.name,
+        role: user.role,
+      },
     });
   } catch (error) {
     console.error("Token verification error:", error);
@@ -189,44 +198,11 @@ async function deleteUser(req, res) {
     return res.status(500).json({ error: "Internal Server Error" });
   }
 }
-async function fetchAllUsers(req, res) {
-  try {
-    const users = await User.find({});
-    if (!users || users.length === 0) {
-      return res.status(409).json({ error: "No users registered" });
-    }
 
-    // Process each user to attach clan information
-    for (const user of users) {
-      const id = user._id;
-      const clans = (await ClanUser.find({ uid: id })) || []; // Fetch clans associated with the user ID
 
-      let temp;
 
-      if (clans.length > 0) {
-        const clanData = clans[0]; // Access the first ClanUser document
-        temp = {
-          clanIds: clanData.clanIds,
-          clanNames: clanData.clanNames,
-        };
-      } else {
-        temp = {
-          clanIds: [],
-          clanNames: [],
-        };
-      }
 
-      // Attach clan data to user object (temporary, not saved to DB)
-      user._doc.clans = temp; // Use _doc to avoid schema restrictions
-    }
 
-    console.log(users); // Log the users array with clan data
-    return res.json({ users }); // Send the updated users array as response
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({ error: "Server error" });
-  }
-}
 module.exports = {
   handleSignUp,
   handleLogin,

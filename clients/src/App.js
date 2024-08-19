@@ -4,7 +4,7 @@ import Signup from "./Components/Signup";
 import Login from "./Components/Login";
 import Home from "./Components/Home"; // Changed to Components
 import AddWorkout from "./Components/AddWorkout"; // Changed to Components
-import ViewWorkouts from "./Components/ViewWorkous"; // Changed to Components
+import ViewWorkouts from "./Components/ViewWorkouts"; // Changed to Components
 import ViewClans from "./Components/ViewClans"; // Changed to Components
 import ViewUsers from "./Components/ViewUsers"; // Changed to Components
 
@@ -34,7 +34,14 @@ const App = () => {
         <div className="App">
           <main>
             <Routes>
-              <Route path="/admin" element={<Admin />} />
+              <Route
+                path="/admin"
+                element={
+                  <PrivateRoute adminOnly={true}>
+                    <Admin />
+                  </PrivateRoute>
+                }
+              />
               <Route path="/viewUsers" element={<ViewUsers />} />
 
               {/* Private Routes */}

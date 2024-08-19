@@ -18,10 +18,11 @@ async function postNotifications(req, res) {
 
 async function getUserCount(req, res) {
   try {
-    const userCount = await User.countDocuments(); // Changed for consistency and correctness
-    res.status(200).json({ userCount }); // Changed status code to 200 for successful GET request
+    const userCount = await User.countDocuments({ role: "user" });
+    const adminCount = await User.countDocuments({ role: "admin" });
+    res.status(200).json({ userCount, adminCount });
   } catch (error) {
-    console.error("Error getting number of users:", error);
+    console.error("Error getting user counts:", error);
     res.status(500).json({ error: "Server error" });
   }
 }
@@ -40,4 +41,68 @@ async function deleteNotification(req, res) {
   }
 }
 
-module.exports = { postNotifications, getUserCount, deleteNotification };
+async function fetchAllUsers(req, res) {
+  try {
+    const users = await User.find({}).select("-password");
+    res.json({ users });
+  } catch (error) {
+    console.error("Error fetching users:", error);
+    res.status(500).json({ error: "Server error" });
+  }
+}
+
+async function promoteToAdmin(req, res) {
+  try {
+    const userId = req.params.id;
+    const user = await User.findByIdAndUpdate(
+      userId,
+      { role: "admin" },
+      { new: true }
+    ).select("-password");
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    res.json({ message: "User promoted to admin", user });
+  } catch (error) {
+    console.error("Error promoting user to admin:", error);
+    res.status(500).json({ error: "Server error" });
+  }
+}
+
+async function demoteToUser(req, res) {
+  try {
+    const userId = req.params.id;
+    const user = await User.findByIdAndUpdate(
+      userId,
+      { role: "user" },
+      { new: true }
+    ).select("-password");
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    res.json({ message: "Admin demoted to user", user });
+  } catch (error) {
+    console.error("Error demoting admin to user:", error);
+    res.status(500).json({ error: "Server error" });
+  }
+}
+
+async function getNotifications(req, res) {
+  try {
+    const notifications = await Notification.find({}).sort({ createdAt: -1 });
+    res.status(200).json(notifications);
+  } catch (error) {
+    console.error("Error fetching notifications:", error);
+    res.status(500).json({ error: "Server error" });
+  }
+}
+
+module.exports = {
+  postNotifications,
+  getUserCount,
+  deleteNotification,
+  promoteToAdmin,
+  demoteToUser,
+  fetchAllUsers,
+  getNotifications,
+};

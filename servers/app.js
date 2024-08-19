@@ -20,6 +20,7 @@ const { URL } = require("./url");
 const {
   restrictToLoggedInUsersOnly,
   checkAuth,
+  isAdmin,
 } = require("./middlewares/auth");
 
 const app = express();
@@ -55,6 +56,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
 
 // Route setup
+app.use("/admin", isAdmin, adminRoutes);
 app.use("/auth", userRoutes);
 app.use("/", checkAuth);
 app.use("/", workoutRoutes);
@@ -62,7 +64,6 @@ app.use("/", clanRoutes);
 app.use("/", homeRoutes);
 app.use("/", calorieRoutes);
 app.use("/", notificationsRoutes);
-app.use("/admin", adminRoutes);
 
 // Example middleware to redirect based on authentication
 app.get("/", checkAuth, (req, res) => {

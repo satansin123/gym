@@ -1,15 +1,14 @@
 const jwt = require("jsonwebtoken");
 
 function setUser(user) {
-  try {
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+  const token = jwt.sign(
+    { id: user._id, email: user.email, role: user.role },
+    process.env.JWT_SECRET,
+    {
       expiresIn: "1d",
-    });
-    return token;
-  } catch (error) {
-    console.error("Error generating token:", error);
-    return null;
-  }
+    }
+  );
+  return token;
 }
 
 function getUser(token) {
