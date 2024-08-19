@@ -191,7 +191,7 @@ async function deleteUser(req, res) {
 }
 async function fetchAllUsers(req, res) {
   try {
-    const users = await User.find({});
+    const users = await User.find({}).select("-password");
     if (!users || users.length === 0) {
       return res.status(409).json({ error: "No users registered" });
     }
@@ -199,34 +199,77 @@ async function fetchAllUsers(req, res) {
     // Process each user to attach clan information
     for (const user of users) {
       const id = user._id;
-      const clans = (await ClanUser.find({ uid: id })) || []; // Fetch clans associated with the user ID
+      const clans = (await ClanUser.find({ uid: id })) || [];
 
-      let temp;
+      let temp = {
+        clanIds: clans.length > 0 ? clans[0].clanIds : [],
+        clanNames: clans.length > 0 ? clans[0].clanNames : [],
+      };
 
-      if (clans.length > 0) {
-        const clanData = clans[0]; // Access the first ClanUser document
-        temp = {
-          clanIds: clanData.clanIds,
-          clanNames: clanData.clanNames,
-        };
-      } else {
-        temp = {
-          clanIds: [],
-          clanNames: [],
-        };
-      }
-
-      // Attach clan data to user object (temporary, not saved to DB)
-      user._doc.clans = temp; // Use _doc to avoid schema restrictions
+      user._doc.clans = temp;
     }
 
-    console.log(users); // Log the users array with clan data
-    return res.json({ users }); // Send the updated users array as response
+    return res.json({ users });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: "Server error" });
   }
 }
+
+// New function to promote user to admin
+async function promoteToAdmin(req, res) {
+  try {
+    const { userId } = req.params;
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { role: "admin" },
+      { new: true }
+    ).select("-password");
+
+    if (!updatedUser) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    return res.json({ message: "User promoted to admin", user: updatedUser });
+  } catch (error) {
+    console.error("Error promoting user to admin:", error);
+    return res.status(500).json({ error: "Server error" });
+  }
+}
+
+// New function to demote admin to user
+async function demoteToUser(req, res) {
+  try {
+    const { userId } = req.params;
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { role: "user" },
+      { new: true }
+    ).select("-password");
+
+    if (!updatedUser) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    return res.json({ message: "Admin demoted to user", user: updatedUser });
+  } catch (error) {
+    console.error("Error demoting admin to user:", error);
+    return res.status(500).json({ error: "Server error" });
+  }
+}
+
+// New function to get user counts
+async function getUserCounts(req, res) {
+  try {
+    const userCount = await User.countDocuments({ role: "user" });
+    const adminCount = await User.countDocuments({ role: "admin" });
+    return res.json({ userCount, adminCount });
+  } catch (error) {
+    console.error("Error getting user counts:", error);
+    return res.status(500).json({ error: "Server error" });
+  }
+}
+
 module.exports = {
   handleSignUp,
   handleLogin,
@@ -235,4 +278,7 @@ module.exports = {
   verifyToken,
   fetchAllUsers,
   getUsername,
+  promoteToAdmin,
+  demoteToUser,
+  getUserCounts,
 };

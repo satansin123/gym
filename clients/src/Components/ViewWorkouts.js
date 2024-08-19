@@ -77,14 +77,11 @@ const Button = styled.button`
     background-color: #0056b3;
   }
 `;
-
 const WorkoutList = () => {
   const { user } = useContext(UserContext);
   const [workouts, setWorkouts] = useState([]);
   const [filteredExercises, setFilteredExercises] = useState([]);
-  const [filteredByDate, setFilteredByDate] = useState([]);
   const [openDates, setOpenDates] = useState({});
-  const [searchDate, setSearchDate] = useState("");
 
   useEffect(() => {
     const fetchWorkouts = async () => {
@@ -94,8 +91,7 @@ const WorkoutList = () => {
         });
         const flattenedWorkouts = response.data.flat();
         setWorkouts(flattenedWorkouts);
-        setFilteredExercises(flattenedWorkouts); // Initial filteredExercises to all workouts
-        setFilteredByDate(flattenedWorkouts); // Initial filteredByDate to all workouts
+        setFilteredExercises(flattenedWorkouts); // Set initial filteredExercises to all workouts
       } catch (error) {
         console.error(error);
       }
@@ -103,24 +99,22 @@ const WorkoutList = () => {
     fetchWorkouts();
   }, [user]);
 
-  const handleSearch = (event) => {
-    const searchTerm = event.target.value.toLowerCase();
-    const filtered = workouts.filter((workout) =>
-      workout.exercises.some((item) =>
-        item.name.toLowerCase().includes(searchTerm)
-      )
-    );
-    setFilteredExercises(filtered);
-  };
+  const handleSearch = async (event) => {
+    if (event.target.value !== "") {
+      const regex = new RegExp(`.*${event.target.value}.*`, "i"); // Use the search value
 
-  const handleDateChange = (event) => {
-    const selectedDate = event.target.value;
-    setSearchDate(selectedDate);
-    const filtered = workouts.filter(
-      (workout) =>
-        new Date(workout.date).toISOString().split("T")[0] === selectedDate
-    );
-    setFilteredByDate(filtered);
+      // Flatten the exercises from all workouts and filter them
+      const filtered = workouts
+        .map((workout) => ({
+          date: workout.date,
+          exercises: workout.exercises.filter((item) => regex.test(item.name)),
+        }))
+        .filter((workout) => workout.exercises.length > 0); // Only include workouts with matching exercises
+
+      setFilteredExercises(filtered);
+    } else {
+      setFilteredExercises(workouts); // Reset to all workouts if search is empty
+    }
   };
 
   const handleToggleDate = (date) => {
@@ -130,31 +124,23 @@ const WorkoutList = () => {
     }));
   };
 
-  const workoutsByDate = (searchDate ? filteredByDate : filteredExercises).reduce(
-    (acc, workout) => {
-      const date = new Date(workout.date).toISOString().split("T")[0];
-      if (!acc[date]) {
-        acc[date] = [];
-      }
-      acc[date].push(workout);
-      return acc;
-    },
-    {}
-  );
+  const workoutsByDate = filteredExercises.reduce((acc, workout) => {
+    const date = new Date(workout.date).toISOString().split("T")[0];
+    if (!acc[date]) {
+      acc[date] = [];
+    }
+    acc[date].push(workout);
+    return acc;
+  }, {});
 
   return (
     <Container>
       <form>
         <input
           type="text"
-          placeholder="Filter by exercise"
-          onChange={handleSearch}
+          placeholder="Filter"
+          onChange={(e) => handleSearch(e)}
           required
-        />
-        <input
-          type="date"
-          value={searchDate}
-          onChange={handleDateChange}
         />
       </form>
       {Object.keys(workoutsByDate).length === 0 ? (

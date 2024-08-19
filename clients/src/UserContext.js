@@ -12,7 +12,7 @@ export const UserProvider = ({ children }) => {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
-  const PUBLIC_ROUTES = ["/login", "/signup", "/admin", "/viewUsers"];
+  const PUBLIC_ROUTES = ["/login", "/signup", "/viewUsers", "/admin"];
 
   useEffect(() => {
     const verifyUser = async () => {
